@@ -1,1 +1,19 @@
-<p>home works!</p>
+<h2>🎵 Catálogo de Canciones</h2>
+
+<div *ngIf="canciones$ | async as canciones; else cargando">
+  <div *ngIf="canciones.length > 0; else sinCanciones">
+    <div *ngFor="let cancion of canciones" class="cancion-card">
+      <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
+      <p><strong>Género:</strong> {{ cancion.genero }}</p>
+      <p><strong>Duración:</strong> {{ cancion.duracion }} min</p>
+      <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
+    </div>
+  </div>
+  <ng-template #sinCanciones>
+    <p>No hay canciones disponibles.</p>
+  </ng-template>
+</div>
+
+<ng-template #cargando>
+  <p>Cargando canciones...</p>
+</ng-template>
