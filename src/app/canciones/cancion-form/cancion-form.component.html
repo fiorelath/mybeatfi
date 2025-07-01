@@ -1,0 +1,50 @@
+<h2>🎶 Agregar Canción</h2>
+
+<form [formGroup]="cancionForm" (ngSubmit)="guardar()" novalidate>
+
+  <!-- Título -->
+  <label for="titulo">Título:</label>
+  <input id="titulo" formControlName="titulo" />
+  <div *ngIf="titulo?.touched && titulo?.invalid" class="error">
+    <div *ngIf="titulo.errors?.['required']">El título es obligatorio.</div>
+    <div *ngIf="titulo.errors?.['minlength']">Debe tener al menos 2 caracteres.</div>
+    <div *ngIf="titulo.errors?.['maxlength']">No puede exceder los 50 caracteres.</div>
+  </div>
+
+  <!-- Artista -->
+  <label for="artista">Artista:</label>
+  <input id="artista" formControlName="artista" />
+  <div *ngIf="artista?.touched && artista?.invalid" class="error">
+    <div *ngIf="artista.errors?.['required']">El artista es obligatorio.</div>
+    <div *ngIf="artista.errors?.['minlength']">Debe tener al menos 2 caracteres.</div>
+    <div *ngIf="artista.errors?.['maxlength']">No puede exceder los 50 caracteres.</div>
+  </div>
+
+  <!-- Duración -->
+  <label for="duracion">Duración (min):</label>
+  <input id="duracion" type="number" formControlName="duracion" />
+  <div *ngIf="duracion?.touched && duracion?.invalid" class="error">
+    <div *ngIf="duracion.errors?.['required']">La duración es obligatoria.</div>
+    <div *ngIf="duracion.errors?.['min']">Debe ser mayor que 0 minutos.</div>
+    <div *ngIf="duracion.errors?.['max']">No puede durar más de 30 minutos.</div>
+  </div>
+
+  <!-- Género -->
+  <label for="genero">Género:</label>
+  <input id="genero" formControlName="genero" />
+  <div *ngIf="genero?.touched && genero?.invalid" class="error">
+    <div *ngIf="genero.errors?.['required']">El género es obligatorio.</div>
+    <div *ngIf="genero.errors?.['minlength']">Debe tener al menos 3 caracteres.</div>
+    <div *ngIf="genero.errors?.['maxlength']">No puede exceder los 30 caracteres.</div>
+  </div>
+
+  <!-- Imagen URL -->
+  <label for="imagenUrl">Imagen URL:</label>
+  <input id="imagenUrl" formControlName="imagenUrl" />
+  <div *ngIf="imagenUrl?.touched && imagenUrl?.invalid" class="error">
+    <div *ngIf="imagenUrl.errors?.['required']">La imagen es obligatoria.</div>
+    <div *ngIf="imagenUrl.errors?.['pattern']">Debe ser una URL válida que termine en .jpg, .png, .webp, etc.</div>
+  </div>
+
+  <button type="submit" [disabled]="cancionForm.invalid">Guardar Canción</button>
+</form>

@@ -1,11 +1,19 @@
 <h2>🎵 Catálogo de Canciones</h2>
 
+<!-- ✅ Botón para agregar nueva canción -->
+<div style="margin-bottom: 16px;">
+  <a routerLink="/home/nueva">
+    <button>➕ Agregar Nueva Canción</button>
+  </a>
+</div>
+
+<!-- Resto del código como ya lo tienes -->
 <div *ngIf="canciones$ | async as canciones; else cargando">
   <div *ngIf="canciones.length > 0; else sinCanciones">
     <div *ngFor="let cancion of canciones" class="cancion-card">
-      <a [routerLink]="['/home/cancion', cancion.id]" class="cancion-link">
+      <a [routerLink]="['/home/cancion', cancion.id]" style="text-decoration: none; color: inherit;">
         <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
-        
+
         <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
       </a>
     </div>
