@@ -1,1 +1,11 @@
-<p>cancion-detalle works!</p>
+<div *ngIf="cancion$ | async as cancion; else cargando">
+  <h2>{{ cancion.titulo }}</h2>
+  <p><strong>Artista:</strong> {{ cancion.artista }}</p>
+  <p><strong>Género:</strong> {{ cancion.genero }}</p>
+  <p><strong>Duración:</strong> {{ cancion.duracion }} min</p>
+  <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="200" />
+</div>
+
+<ng-template #cargando>
+  <p>Cargando información de la canción...</p>
+</ng-template>

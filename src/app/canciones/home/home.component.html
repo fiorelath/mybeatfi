@@ -3,10 +3,11 @@
 <div *ngIf="canciones$ | async as canciones; else cargando">
   <div *ngIf="canciones.length > 0; else sinCanciones">
     <div *ngFor="let cancion of canciones" class="cancion-card">
-      <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
-      <p><strong>Género:</strong> {{ cancion.genero }}</p>
-      <p><strong>Duración:</strong> {{ cancion.duracion }} min</p>
-      <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
+      <a [routerLink]="['/home/cancion', cancion.id]" class="cancion-link">
+        <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
+        
+        <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
+      </a>
     </div>
   </div>
   <ng-template #sinCanciones>

@@ -1,0 +1,15 @@
+.cancion-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.cancion-link:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.01);
+}
