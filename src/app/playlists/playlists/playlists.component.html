@@ -1,1 +1,33 @@
-<p>playlists works!</p>
+<h2>🎧 Tus Playlists</h2>
+
+<!-- Botón para crear nueva playlist -->
+<div style="margin-bottom: 16px;">
+  <a routerLink="/playlists/nueva">
+    <button>➕ Crear Nueva Playlist</button>
+  </a>
+</div>
+
+<!-- Lista de playlists -->
+<div *ngIf="playlists$ | async as playlists; else cargando">
+  <div *ngIf="playlists.length > 0; else sinPlaylists">
+    <div *ngFor="let playlist of playlists" class="playlist-card" style="border: 1px solid #ccc; padding: 12px; margin-bottom: 12px;">
+      <h3>{{ playlist.nombre }}</h3>
+      <p>{{ playlist.descripcion }}</p>
+
+      <!-- Acciones -->
+      <div style="margin-top: 8px;">
+        <a [routerLink]="['/playlists/playlist', playlist.id]"><button>🔍 Ver Detalle</button></a>
+        <a [routerLink]="['/playlists/editar', playlist.id]"><button>✏️ Editar</button></a>
+        <button (click)="eliminarPlaylist(playlist.id)">🗑️ Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #sinPlaylists>
+    <p>No hay playlists aún.</p>
+  </ng-template>
+</div>
+
+<ng-template #cargando>
+  <p>Cargando playlists...</p>
+</ng-template>

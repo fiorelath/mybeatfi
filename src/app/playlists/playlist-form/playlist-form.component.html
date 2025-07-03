@@ -1,0 +1,54 @@
+<h2>🎶 {{ idEnEdicion ? 'Editar Playlist' : 'Crear Nueva Playlist' }}</h2>
+
+<form [formGroup]="playlistForm" (ngSubmit)="guardar()">
+
+  <!-- 🎵 Campo: Nombre -->
+  <div>
+    <label for="nombre">Nombre:</label>
+    <input id="nombre" type="text" formControlName="nombre" />
+    <div *ngIf="nombre.touched && nombre.invalid" style="color: red;">
+      <small *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</small>
+      <small *ngIf="nombre.errors?.['minlength']">Mínimo 2 caracteres.</small>
+    </div>
+  </div>
+
+  <!-- 📝 Campo: Descripción -->
+  <div>
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" formControlName="descripcion"></textarea>
+    <div *ngIf="descripcion.touched && descripcion.invalid" style="color: red;">
+      <small *ngIf="descripcion.errors?.['required']">La descripción es obligatoria.</small>
+      <small *ngIf="descripcion.errors?.['minlength']">Mínimo 5 caracteres.</small>
+    </div>
+  </div>
+
+  <!-- 🎧 Selección de canciones -->
+  <div>
+    <label>Canciones:</label>
+    <div *ngIf="cancionesDisponibles.length > 0; else sinCanciones">
+      <div *ngFor="let cancion of cancionesDisponibles">
+        <ng-container *ngIf="cancion.id as id">
+          <label>
+            <input
+              type="checkbox"
+              [value]="id"
+              (change)="toggleCancion(id, $event)"
+              [checked]="playlistForm.get('canciones')?.value.includes(id)"
+            />
+            {{ cancion.titulo }} - {{ cancion.artista }}
+          </label>
+        </ng-container>
+      </div>
+    </div>
+    <ng-template #sinCanciones>
+      <p>No hay canciones disponibles para seleccionar.</p>
+    </ng-template>
+  </div>
+
+  <!-- 💾 Botón Guardar -->
+  <button type="submit" [disabled]="guardando">💾 Guardar</button>
+
+  <!-- 📢 Mensaje -->
+  <p *ngIf="mensaje" style="margin-top: 12px;">{{ mensaje }}</p>
+
+</form>

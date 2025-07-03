@@ -1,1 +1,22 @@
-<p>playlist-detalle works!</p>
+<h2>🎵 Detalles de Playlist</h2>
+
+<div *ngIf="!cargando; else cargandoTemplate">
+  <h3>{{ playlist.nombre }}</h3>
+  <p>{{ playlist.descripcion }}</p>
+
+  <h4>🎶 Canciones:</h4>
+  <ul *ngIf="cancionesDePlaylist.length > 0; else sinCanciones">
+    <li *ngFor="let cancion of cancionesDePlaylist">
+      <strong>{{ cancion.titulo }}</strong> - {{ cancion.artista }}<br>
+      <img [src]="cancion.imagenUrl" alt="imagen de {{ cancion.titulo }}" width="120"><br><br>
+    </li>
+  </ul>
+
+  <ng-template #sinCanciones>
+    <p>Esta playlist no tiene canciones.</p>
+  </ng-template>
+</div>
+
+<ng-template #cargandoTemplate>
+  <p>Cargando detalles de la playlist...</p>
+</ng-template>
