@@ -7,7 +7,8 @@ import { CancionFormComponent } from './cancion-form/cancion-form.component'; //
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'cancion/:id', component: CancionDetalleComponent },
-  { path: 'nueva', component: CancionFormComponent } // ✅ Ruta nueva para crear canción
+  { path: 'nueva', component: CancionFormComponent }, // ✅ Crear nueva canción
+  { path: 'editar/:id', component: CancionFormComponent } // ✅ Editar canción existente
 ];
 
 @NgModule({

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, docData, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 export interface Cancion {
@@ -18,26 +18,58 @@ export class CancionesService {
 
   constructor(private firestore: Firestore) {}
 
-  //  Obtener todas las canciones
+  // Obtener todas las canciones
   obtenerCanciones(): Observable<Cancion[]> {
     const cancionesRef = collection(this.firestore, 'canciones');
     return collectionData(cancionesRef, { idField: 'id' }) as Observable<Cancion[]>;
   }
 
-  //  Obtener una canción por ID
+  // Obtener una canción por ID
   obtenerCancionPorId(id: string): Observable<Cancion> {
     const cancionRef = doc(this.firestore, `canciones/${id}`);
     return docData(cancionRef, { idField: 'id' }) as Observable<Cancion>;
   }
 
-  // Crear una nueva canción
+  // Crear una nueva canción (CREATE)
   agregarCancion(cancion: Cancion): Promise<void> {
     const cancionesRef = collection(this.firestore, 'canciones');
-    return addDoc(cancionesRef, cancion).then(() => {
-      console.log('✅ Canción agregada correctamente');
-    }).catch((error) => {
-      console.error('❌ Error al agregar canción:', error);
-      throw error;
-    });
+    const { id, ...datosCancion } = cancion; // 🔥 Excluir campo `id`
+
+    return addDoc(cancionesRef, datosCancion)
+      .then(() => {
+        console.log('✅ Canción agregada correctamente');
+      })
+      .catch((error) => {
+        console.error('❌ Error al agregar canción:', error);
+        throw error;
+      });
+  }
+
+  // Actualizar una canción existente (UPDATE)
+  actualizarCancion(id: string, cancion: Cancion): Promise<void> {
+    const cancionRef = doc(this.firestore, `canciones/${id}`);
+    const { id: _, ...datosCancion } = cancion; // 🔥 Excluir campo `id`
+
+    return updateDoc(cancionRef, datosCancion)
+      .then(() => {
+        console.log('✅ Canción actualizada correctamente');
+      })
+      .catch((error) => {
+        console.error('❌ Error al actualizar canción:', error);
+        throw error;
+      });
+  }
+
+  // 🗑️ Eliminar una canción (DELETE)
+  eliminarCancion(id: string): Promise<void> {
+    const cancionRef = doc(this.firestore, `canciones/${id}`);
+    return deleteDoc(cancionRef)
+      .then(() => {
+        console.log('🗑️ Canción eliminada correctamente');
+      })
+      .catch((error) => {
+        console.error('❌ Error al eliminar canción:', error);
+        throw error;
+      });
   }
 }
