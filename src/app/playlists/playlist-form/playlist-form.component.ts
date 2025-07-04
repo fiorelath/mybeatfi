@@ -26,7 +26,7 @@ export class PlaylistFormComponent implements OnInit {
   ) {
     this.playlistForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
-      descripcion: ['', [Validators.required, Validators.minLength(5)]],
+      descripcion: [''],
       canciones: [[]] // IDs de canciones seleccionadas
     });
   }
