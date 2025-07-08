@@ -1,20 +1,18 @@
-<div *ngIf="cancion$ | async as cancion; else cargando">
+<div *ngIf="cancion">
   <h2>{{ cancion.titulo }}</h2>
   <p><strong>Artista:</strong> {{ cancion.artista }}</p>
   <p><strong>Género:</strong> {{ cancion.genero }}</p>
   <p><strong>Duración:</strong> {{ cancion.duracion }} min</p>
   <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="200" />
 
-  <!-- Botón para editar -->
-  <div style="margin-top: 16px;">
+  <!-- ✅ Mostrar los botones solo si el usuario actual es el dueño -->
+  <div *ngIf="uidActual && cancion.uid === uidActual" style="margin-top: 16px;">
     <a [routerLink]="['/home/editar', cancion.id]">
       <button>✏️ Editar</button>
     </a>
-  </div>
-
-  <!-- ✅ Botón para eliminar -->
-  <div style="margin-top: 8px;">
-    <button (click)="eliminar()" style="background-color: red; color: white;">🗑️ Eliminar</button>
+    <button (click)="eliminar()" style="background-color: red; color: white; margin-left: 8px;">
+      🗑️ Eliminar
+    </button>
   </div>
 </div>
 

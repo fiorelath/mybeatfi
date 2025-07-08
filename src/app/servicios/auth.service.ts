@@ -9,34 +9,39 @@ export class AuthService {
   private usuarioActualSubject = new BehaviorSubject<User | null>(null);
 
   constructor(private auth: Auth) {
-    // Detectar si hay usuario logueado
-    onAuthStateChanged(this.auth, user => {
+    // Escuchar cambios en la sesión
+    onAuthStateChanged(this.auth, (user) => {
       this.usuarioActualSubject.next(user);
     });
   }
 
-  // 🔐 Registrar usuario nuevo
+  // 🔐 Registro de usuario
   registrar(email: string, password: string): Promise<any> {
     return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
-  // 🔐 Iniciar sesión
+  // 🔐 Login de usuario
   login(email: string, password: string): Promise<any> {
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
-  // 🔓 Cerrar sesión
+  // 🔓 Logout
   logout(): Promise<void> {
     return signOut(this.auth);
   }
 
-  // 👤 Obtener el observable del usuario actual
+  // 👤 Observable del usuario actual (para el Navbar u otros)
   get usuarioActual$() {
     return this.usuarioActualSubject.asObservable();
   }
 
-  // 👤 Obtener directamente el UID o null
+  // 👤 UID del usuario actual (para comparar con canciones u otros datos)
   get uidActual(): string | null {
-    return this.auth.currentUser?.uid ?? null;
+    return this.usuarioActualSubject.value?.uid ?? null;
+  }
+
+  // 👤 Email del usuario actual (opcional)
+  get emailActual(): string | null {
+    return this.usuarioActualSubject.value?.email ?? null;
   }
 }

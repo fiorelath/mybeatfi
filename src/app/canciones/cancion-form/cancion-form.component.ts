@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CancionesService, Cancion } from '../../servicios/canciones.service';
+import { AuthService } from 'src/app/servicios/auth.service'; // 👈 IMPORTANTE
 
 @Component({
   selector: 'app-cancion-form',
@@ -17,7 +18,8 @@ export class CancionFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cancionesService: CancionesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService // 👈 INYECTAMOS el AuthService
   ) {
     this.cancionForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
@@ -61,7 +63,20 @@ export class CancionFormComponent implements OnInit {
     if (this.cancionForm.valid) {
       this.guardando = true;
       this.mensaje = '';
-      const datosCancion = this.cancionForm.value;
+
+      // Obtenemos el UID del usuario actual
+      const uid = this.authService.uidActual;
+
+      if (!uid) {
+        this.mensaje = '❌ No estás autenticada. Inicia sesión para guardar canciones.';
+        this.guardando = false;
+        return;
+      }
+
+      const datosCancion: Cancion = {
+        ...this.cancionForm.value,
+        uid: uid  // 👈 Aquí agregamos el campo UID del creador
+      };
 
       if (this.idEnEdicion) {
         // ✏️ Modo edición

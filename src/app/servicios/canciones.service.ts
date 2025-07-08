@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service'; // ✅ Importamos el servicio de autenticación
 
 export interface Cancion {
   id?: string;
@@ -9,6 +10,7 @@ export interface Cancion {
   genero: string;
   duracion: number;
   imagenUrl: string;
+  uid?: string; // ✅ Campo para saber quién creó la canción
 }
 
 @Injectable({
@@ -16,7 +18,10 @@ export interface Cancion {
 })
 export class CancionesService {
 
-  constructor(private firestore: Firestore) {}
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService // ✅ Inyectamos AuthService
+  ) {}
 
   // Obtener todas las canciones
   obtenerCanciones(): Observable<Cancion[]> {
@@ -33,11 +38,20 @@ export class CancionesService {
   // Crear una nueva canción (CREATE)
   agregarCancion(cancion: Cancion): Promise<void> {
     const cancionesRef = collection(this.firestore, 'canciones');
-    const { id, ...datosCancion } = cancion; // 🔥 Excluir campo `id`
+    const uid = this.authService.uidActual;
 
-    return addDoc(cancionesRef, datosCancion)
+    if (!uid) {
+      return Promise.reject('Usuario no autenticado');
+    }
+
+    const nuevaCancion = {
+      ...cancion,
+      uid // ✅ Agregamos el UID del usuario logueado
+    };
+
+    return addDoc(cancionesRef, nuevaCancion)
       .then(() => {
-        console.log('✅ Canción agregada correctamente');
+        console.log('✅ Canción agregada correctamente con UID');
       })
       .catch((error) => {
         console.error('❌ Error al agregar canción:', error);
