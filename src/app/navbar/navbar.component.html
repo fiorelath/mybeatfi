@@ -1,0 +1,11 @@
+<nav style="padding: 10px; background-color: #f0f0f0;">
+  <a routerLink="/home">Inicio</a> |
+  <a routerLink="/playlists" *ngIf="(usuario$ | async)">Mis Playlists</a> |
+  <a routerLink="/login" *ngIf="!(usuario$ | async)">Login</a> |
+  <a routerLink="/login/registro" *ngIf="!(usuario$ | async)">Registro</a>
+  
+  <span style="float: right;" *ngIf="usuario$ | async as usuario">
+    Bienvenido, {{ usuario.email }}
+    <button (click)="logout()">Cerrar sesión</button>
+  </span>
+</nav>
