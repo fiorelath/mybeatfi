@@ -7,11 +7,13 @@ import { HomeComponent } from './home/home.component';
 import { CancionDetalleComponent } from './cancion-detalle/cancion-detalle.component';
 import { CancionFormComponent } from './cancion-form/cancion-form.component';
 
+import { DuracionPipe } from '../pipes/duracion.pipe';
 @NgModule({
   declarations: [
     HomeComponent,
     CancionDetalleComponent,
-    CancionFormComponent
+    CancionFormComponent,
+    DuracionPipe,
   ],
   imports: [
     CommonModule,

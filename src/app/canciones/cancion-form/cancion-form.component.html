@@ -1,44 +1,44 @@
-<h2>🎶 Agregar Canción</h2>
+<h2>{{ idEnEdicion ? '📝 Editar Canción' : '🎶 Agregar Canción' }}</h2>
 
 <form [formGroup]="cancionForm" (ngSubmit)="guardar()" novalidate>
 
-  <!-- Título -->
   <label for="titulo">Título:</label>
   <input id="titulo" formControlName="titulo" />
   <div *ngIf="titulo.touched && titulo.invalid" class="error">
     <small *ngIf="titulo.errors?.['required']">El título es obligatorio.</small>
-    <small *ngIf="titulo.errors?.['minlength']">Debe tener al menos 2 caracteres.</small>
-    <small *ngIf="titulo.errors?.['maxlength']">No puede exceder los 50 caracteres.</small>
+    <small *ngIf="titulo.errors?.['minlength']">Mínimo 2 caracteres.</small>
+    <small *ngIf="titulo.errors?.['maxlength']">Máximo 50 caracteres.</small>
   </div>
 
-  <!-- Artista -->
   <label for="artista">Artista:</label>
   <input id="artista" formControlName="artista" />
   <div *ngIf="artista.touched && artista.invalid" class="error">
     <small *ngIf="artista.errors?.['required']">El artista es obligatorio.</small>
-    <small *ngIf="artista.errors?.['minlength']">Debe tener al menos 2 caracteres.</small>
-    <small *ngIf="artista.errors?.['maxlength']">No puede exceder los 50 caracteres.</small>
   </div>
 
-  <!-- Duración -->
-  <label for="duracion">Duración (min):</label>
-  <input id="duracion" type="number" formControlName="duracion" />
-  <div *ngIf="duracion.touched && duracion.invalid" class="error">
-    <small *ngIf="duracion.errors?.['required']">La duración es obligatoria.</small>
-    <small *ngIf="duracion.errors?.['min']">Debe ser al menos 1 minuto.</small>
-    <small *ngIf="duracion.errors?.['max']">No puede ser mayor a 30 minutos.</small>
+  <label>Duración:</label>
+  <div style="display: flex; gap: 8px;">
+    <div>
+      <input type="number" id="minutos" formControlName="minutos" placeholder="Minutos" min="0" />
+    </div>
+    <div>
+      <input type="number" id="segundos" formControlName="segundos" placeholder="Segundos" min="0" max="59" />
+    </div>
+  </div>
+  <div *ngIf="minutos.touched && minutos.invalid" class="error">
+    <small *ngIf="minutos.errors?.['required']">Los minutos son obligatorios.</small>
+  </div>
+  <div *ngIf="segundos.touched && segundos.invalid" class="error">
+    <small *ngIf="segundos.errors?.['required']">Los segundos son obligatorios.</small>
+    <small *ngIf="segundos.errors?.['max']">No puede exceder 59 segundos.</small>
   </div>
 
-  <!-- Género -->
   <label for="genero">Género:</label>
   <input id="genero" formControlName="genero" />
   <div *ngIf="genero.touched && genero.invalid" class="error">
     <small *ngIf="genero.errors?.['required']">El género es obligatorio.</small>
-    <small *ngIf="genero.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
-    <small *ngIf="genero.errors?.['maxlength']">No puede exceder los 30 caracteres.</small>
   </div>
 
-  <!-- Imagen URL -->
   <label for="imagenUrl">Imagen URL:</label>
   <input id="imagenUrl" formControlName="imagenUrl" />
   <div *ngIf="imagenUrl.touched && imagenUrl.invalid" class="error">
@@ -46,6 +46,8 @@
     <small *ngIf="imagenUrl.errors?.['pattern']">Debe ser una URL válida (.jpg, .png, etc.).</small>
   </div>
 
-  <button type="submit" [disabled]="cancionForm.invalid">Guardar Canción</button>
-  <button type="button" (click)="cancionForm.reset()">Limpiar</button>
+  <button type="submit" [disabled]="cancionForm.invalid">{{ idEnEdicion ? 'Actualizar' : 'Guardar' }} Canción</button>
+  <button type="button" (click)="resetFormulario()">Limpiar</button>
 </form>
+
+<p *ngIf="mensaje">{{ mensaje }}</p>

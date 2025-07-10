@@ -2,7 +2,8 @@
   <h2>{{ cancion.titulo }}</h2>
   <p><strong>Artista:</strong> {{ cancion.artista }}</p>
   <p><strong>Género:</strong> {{ cancion.genero }}</p>
-  <p><strong>Duración:</strong> {{ cancion.duracion }} min</p>
+  <p><strong>Duración:</strong> {{ cancion.duracion | duracion }}</p>
+
   <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="200" />
 
   <!-- ✅ Mostrar los botones solo si el usuario actual es el dueño -->

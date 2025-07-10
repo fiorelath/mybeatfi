@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CancionesService, Cancion } from '../../servicios/canciones.service';
-import { AuthService } from 'src/app/servicios/auth.service'; // 👈 IMPORTANTE
+import { AuthService } from 'src/app/servicios/auth.service';
 
 @Component({
   selector: 'app-cancion-form',
@@ -14,17 +14,19 @@ export class CancionFormComponent implements OnInit {
   guardando = false;
   mensaje = '';
   idEnEdicion: string | null = null;
+  uidOriginal: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private cancionesService: CancionesService,
     private route: ActivatedRoute,
-    private authService: AuthService // 👈 INYECTAMOS el AuthService
+    private authService: AuthService
   ) {
     this.cancionForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       artista: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      duracion: [null, [Validators.required, Validators.min(1), Validators.max(30)]],
+      minutos: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
+      segundos: [0, [Validators.required, Validators.min(0), Validators.max(59)]],
       genero: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       imagenUrl: ['', [
         Validators.required,
@@ -37,17 +39,23 @@ export class CancionFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.idEnEdicion = id;
+      this.mensaje = '📝 Editando canción';
 
       this.cancionesService.obtenerCancionPorId(id).subscribe((cancion: Cancion) => {
         if (cancion) {
+          this.uidOriginal = cancion.uid ?? null;
+
+          const minutos = Math.floor(cancion.duracion);
+          const segundos = Math.round((cancion.duracion - minutos) * 60);
+
           this.cancionForm.patchValue({
             titulo: cancion.titulo,
             artista: cancion.artista,
-            duracion: cancion.duracion,
+            minutos,
+            segundos,
             genero: cancion.genero,
             imagenUrl: cancion.imagenUrl
           });
-          this.mensaje = '📝 Editando canción';
         }
       });
     }
@@ -55,61 +63,63 @@ export class CancionFormComponent implements OnInit {
 
   get titulo() { return this.cancionForm.get('titulo')!; }
   get artista() { return this.cancionForm.get('artista')!; }
-  get duracion() { return this.cancionForm.get('duracion')!; }
+  get minutos() { return this.cancionForm.get('minutos')!; }
+  get segundos() { return this.cancionForm.get('segundos')!; }
   get genero() { return this.cancionForm.get('genero')!; }
   get imagenUrl() { return this.cancionForm.get('imagenUrl')!; }
 
-  guardar() {
-    if (this.cancionForm.valid) {
-      this.guardando = true;
-      this.mensaje = '';
-
-      // Obtenemos el UID del usuario actual
-      const uid = this.authService.uidActual;
-
-      if (!uid) {
-        this.mensaje = '❌ No estás autenticada. Inicia sesión para guardar canciones.';
-        this.guardando = false;
-        return;
-      }
-
-      const datosCancion: Cancion = {
-        ...this.cancionForm.value,
-        uid: uid  // 👈 Aquí agregamos el campo UID del creador
-      };
-
-      if (this.idEnEdicion) {
-        // ✏️ Modo edición
-        this.cancionesService.actualizarCancion(this.idEnEdicion, datosCancion)
-          .then(() => {
-            this.mensaje = '✅ ¡Canción actualizada exitosamente!';
-            this.resetFormulario();
-          })
-          .catch(error => {
-            console.error('Error al actualizar:', error);
-            this.mensaje = '❌ Error al actualizar la canción.';
-          })
-          .finally(() => this.guardando = false);
-      } else {
-        // ➕ Modo creación
-        this.cancionesService.agregarCancion(datosCancion)
-          .then(() => {
-            this.mensaje = '🎉 ¡Canción guardada exitosamente!';
-            this.resetFormulario();
-          })
-          .catch(error => {
-            console.error('Error al guardar:', error);
-            this.mensaje = '❌ Hubo un error al guardar la canción.';
-          })
-          .finally(() => this.guardando = false);
-      }
-    } else {
+  guardar(): void {
+    if (!this.cancionForm.valid) {
       this.cancionForm.markAllAsTouched();
+      this.mensaje = '❌ Por favor, corrige los errores antes de guardar.';
+      return;
     }
+
+    this.guardando = true;
+    this.mensaje = '';
+
+    const uidActual = this.authService.uidActual;
+    if (!uidActual) {
+      this.mensaje = '❌ No estás autenticada. Inicia sesión para guardar canciones.';
+      this.guardando = false;
+      return;
+    }
+
+    const minutos = this.cancionForm.value.minutos;
+    const segundos = this.cancionForm.value.segundos;
+    const duracion = +(minutos + segundos / 60).toFixed(2); // Ej: 3 + 30/60 = 3.50
+
+    const datosCancion: Cancion = {
+      titulo: this.cancionForm.value.titulo,
+      artista: this.cancionForm.value.artista,
+      duracion,
+      genero: this.cancionForm.value.genero,
+      imagenUrl: this.cancionForm.value.imagenUrl,
+      uid: this.idEnEdicion ? this.uidOriginal ?? uidActual : uidActual
+    };
+
+    const accion = this.idEnEdicion
+      ? this.cancionesService.actualizarCancion(this.idEnEdicion, datosCancion)
+      : this.cancionesService.agregarCancion(datosCancion);
+
+    accion
+      .then(() => {
+        this.mensaje = this.idEnEdicion
+          ? '✅ ¡Canción actualizada exitosamente!'
+          : '🎉 ¡Canción guardada exitosamente!';
+        if (!this.idEnEdicion) this.resetFormulario();
+      })
+      .catch(error => {
+        console.error('❌ Error:', error);
+        this.mensaje = '❌ Ocurrió un error al guardar.';
+      })
+      .finally(() => this.guardando = false);
   }
 
-  resetFormulario() {
+  resetFormulario(): void {
     this.cancionForm.reset();
-    this.idEnEdicion = null;
+    if (!this.idEnEdicion) {
+      this.idEnEdicion = null;
+    }
   }
 }

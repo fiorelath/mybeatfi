@@ -10,7 +10,7 @@ export interface Cancion {
   genero: string;
   duracion: number;
   imagenUrl: string;
-  uid?: string; // ✅ Campo para saber quién creó la canción
+  uid?: string;
 }
 
 @Injectable({
@@ -20,7 +20,7 @@ export class CancionesService {
 
   constructor(
     private firestore: Firestore,
-    private authService: AuthService // ✅ Inyectamos AuthService
+    private authService: AuthService
   ) {}
 
   // Obtener todas las canciones
@@ -35,7 +35,7 @@ export class CancionesService {
     return docData(cancionRef, { idField: 'id' }) as Observable<Cancion>;
   }
 
-  // Crear una nueva canción (CREATE)
+  // Crear nueva canción
   agregarCancion(cancion: Cancion): Promise<void> {
     const cancionesRef = collection(this.firestore, 'canciones');
     const uid = this.authService.uidActual;
@@ -46,12 +46,12 @@ export class CancionesService {
 
     const nuevaCancion = {
       ...cancion,
-      uid // ✅ Agregamos el UID del usuario logueado
+      uid
     };
 
     return addDoc(cancionesRef, nuevaCancion)
       .then(() => {
-        console.log('✅ Canción agregada correctamente con UID');
+        console.log('✅ Canción agregada correctamente');
       })
       .catch((error) => {
         console.error('❌ Error al agregar canción:', error);
@@ -59,10 +59,14 @@ export class CancionesService {
       });
   }
 
-  // Actualizar una canción existente (UPDATE)
+  // Actualizar canción existente
   actualizarCancion(id: string, cancion: Cancion): Promise<void> {
+    if (!id) {
+      return Promise.reject('ID de canción inválido');
+    }
+
     const cancionRef = doc(this.firestore, `canciones/${id}`);
-    const { id: _, ...datosCancion } = cancion; // 🔥 Excluir campo `id`
+    const { id: _, ...datosCancion } = cancion;
 
     return updateDoc(cancionRef, datosCancion)
       .then(() => {
@@ -74,7 +78,7 @@ export class CancionesService {
       });
   }
 
-  // 🗑️ Eliminar una canción (DELETE)
+  // Eliminar canción
   eliminarCancion(id: string): Promise<void> {
     const cancionRef = doc(this.firestore, `canciones/${id}`);
     return deleteDoc(cancionRef)
