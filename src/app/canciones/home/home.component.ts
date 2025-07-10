@@ -20,6 +20,9 @@ export class HomeComponent implements OnInit {
   artistasUnicos: string[] = [];
   generosUnicos: string[] = [];
 
+  // 🔽 Ordenamiento
+  ordenSeleccionado: string = '';
+
   constructor(
     private cancionesService: CancionesService,
     private authService: AuthService,
@@ -58,26 +61,38 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // 🔄 Actualizar listas únicas de artistas y géneros
   actualizarOpcionesUnicas(): void {
     this.artistasUnicos = [...new Set(this.cancionesOriginales.map(c => c.artista))];
     this.generosUnicos = [...new Set(this.cancionesOriginales.map(c => c.genero))];
   }
 
-  // 🔍 Aplicar filtros combinados
   aplicarFiltros(): void {
     const termino = this.terminoBusqueda.toLowerCase().trim();
 
-    this.cancionesFiltradas = this.cancionesOriginales.filter(c =>
+    let resultado = this.cancionesOriginales.filter(c =>
       (c.titulo.toLowerCase().includes(termino) ||
        c.artista.toLowerCase().includes(termino) ||
        c.genero.toLowerCase().includes(termino)) &&
       (this.filtroArtista ? c.artista === this.filtroArtista : true) &&
       (this.filtroGenero ? c.genero === this.filtroGenero : true)
     );
+
+    // 🔽 Aplicar ordenamiento
+    switch (this.ordenSeleccionado) {
+      case 'titulo':
+        resultado.sort((a, b) => a.titulo.localeCompare(b.titulo));
+        break;
+      case 'artista':
+        resultado.sort((a, b) => a.artista.localeCompare(b.artista));
+        break;
+      case 'duracion':
+        resultado.sort((a, b) => a.duracion - b.duracion);
+        break;
+    }
+
+    this.cancionesFiltradas = resultado;
   }
 
-  // Se ejecuta cuando cambia algo en los inputs
   onFiltroChange(): void {
     this.aplicarFiltros();
   }

@@ -21,6 +21,14 @@
   <option *ngFor="let genero of generosUnicos" [value]="genero">{{ genero }}</option>
 </select>
 
+<!-- 🔽 Ordenamiento -->
+<select [(ngModel)]="ordenSeleccionado" (change)="onFiltroChange()" style="margin-left: 8px; margin-bottom: 12px; padding: 6px;">
+  <option value="">🔽 Ordenar por...</option>
+  <option value="titulo">🎶 Título (A-Z)</option>
+  <option value="artista">🎤 Artista (A-Z)</option>
+  <option value="duracion">⏱️ Duración (menor a mayor)</option>
+</select>
+
 <!-- ✅ Botón para agregar nueva canción -->
 <div *ngIf="uidActual" style="margin-bottom: 16px;">
   <a routerLink="/home/nueva">
@@ -37,12 +45,6 @@
       <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
       <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
     </a>
-
-    <!-- 🔒 Botones protegidos -->
-    <div *ngIf="uidActual && cancion.uid === uidActual && cancion.id" style="margin-top: 8px;">
-      <button (click)="editarCancion(cancion.id)">✏️ Editar</button>
-      <button (click)="eliminarCancion(cancion.id)">🗑️ Eliminar</button>
-    </div>
   </div>
 </div>
 
