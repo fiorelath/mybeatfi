@@ -1,31 +1,52 @@
 <h2>🎵 Catálogo de Canciones</h2>
 
-<!-- ✅ Botón para agregar nueva canción (solo si está logueado) -->
+<!-- 🔍 Filtro por texto -->
+<input
+  type="text"
+  placeholder="Buscar por título, artista o género..."
+  [(ngModel)]="terminoBusqueda"
+  (input)="onFiltroChange()"
+  style="margin-bottom: 12px; width: 100%; padding: 8px;"
+/>
+
+<!-- 🎤 Filtro por Artista -->
+<select [(ngModel)]="filtroArtista" (change)="onFiltroChange()" style="margin-bottom: 12px; padding: 6px;">
+  <option value="">🎤 Todos los artistas</option>
+  <option *ngFor="let artista of artistasUnicos" [value]="artista">{{ artista }}</option>
+</select>
+
+<!-- 🎧 Filtro por Género -->
+<select [(ngModel)]="filtroGenero" (change)="onFiltroChange()" style="margin-left: 8px; margin-bottom: 12px; padding: 6px;">
+  <option value="">🎧 Todos los géneros</option>
+  <option *ngFor="let genero of generosUnicos" [value]="genero">{{ genero }}</option>
+</select>
+
+<!-- ✅ Botón para agregar nueva canción -->
 <div *ngIf="uidActual" style="margin-bottom: 16px;">
   <a routerLink="/home/nueva">
     <button>➕ Agregar Nueva Canción</button>
   </a>
 </div>
 
-<!-- Lista de canciones -->
-<div *ngIf="canciones$ | async as canciones; else cargando">
-  <div *ngIf="canciones.length > 0; else sinCanciones">
-    <div *ngFor="let cancion of canciones" class="cancion-card" style="margin-bottom: 12px; border: 1px solid #ccc; padding: 8px;">
-      
-      <!-- Enlace a detalle -->
-      <a [routerLink]="['/home/cancion', cancion.id]" style="text-decoration: none; color: inherit;">
-        <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
-        <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
-      </a>
+<!-- 🎼 Lista de canciones filtradas -->
+<div *ngIf="cancionesFiltradas.length > 0; else sinCanciones">
+  <div *ngFor="let cancion of cancionesFiltradas" class="cancion-card" style="margin-bottom: 12px; border: 1px solid #ccc; padding: 8px;">
 
+    <!-- Enlace a detalle -->
+    <a [routerLink]="['/home/cancion', cancion.id]" style="text-decoration: none; color: inherit;">
+      <h3>{{ cancion.titulo }} - {{ cancion.artista }}</h3>
+      <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="150" />
+    </a>
+
+    <!-- 🔒 Botones protegidos -->
+    <div *ngIf="uidActual && cancion.uid === uidActual && cancion.id" style="margin-top: 8px;">
+      <button (click)="editarCancion(cancion.id)">✏️ Editar</button>
+      <button (click)="eliminarCancion(cancion.id)">🗑️ Eliminar</button>
     </div>
   </div>
-
-  <ng-template #sinCanciones>
-    <p>No hay canciones disponibles.</p>
-  </ng-template>
 </div>
 
-<ng-template #cargando>
-  <p>Cargando canciones...</p>
+<!-- 🪹 Sin resultados -->
+<ng-template #sinCanciones>
+  <p>No hay canciones que coincidan con tu búsqueda.</p>
 </ng-template>
