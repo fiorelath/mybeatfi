@@ -12,6 +12,8 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { NavbarComponent } from './navbar/navbar.component';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
