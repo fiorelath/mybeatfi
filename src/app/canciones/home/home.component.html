@@ -3,58 +3,60 @@
   <!-- Título -->
   <h2 class="text-3xl font-bold text-electric mb-8">Catálogo de Canciones</h2>
 
-  <!-- Filtros y búsqueda -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+  <!-- FILTROS MODERNOS con efecto vidrio -->
+  <div class="col-span-full bg-[#1a1a1a]/50 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/20 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-    <!-- Buscador -->
-    <input
-      type="text"
-      [(ngModel)]="terminoBusqueda"
-      (input)="onFiltroChange()"
-      placeholder="Buscar canciones..."
-      class="col-span-1 md:col-span-2 lg:col-span-4 bg-[#1e1e1e] text-light rounded-lg px-4 py-3 border border-muted focus:outline-none focus:ring-2 focus:ring-cyan shadow-sm transition-all duration-300"
-    />
+      <!-- Buscador -->
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        (input)="onFiltroChange()"
+        placeholder="Buscar canciones..."
+        class="col-span-full bg-[#2a2a2a]/70 border border-white/20 text-light placeholder:text-muted rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-cyan shadow-md backdrop-blur-md transition-all duration-300"
+      />
 
-    <!-- Filtro por Artista -->
-    <select
-      [(ngModel)]="filtroArtista"
-      (change)="onFiltroChange()"
-      class="bg-[#1e1e1e] text-light rounded-lg px-4 py-3 border border-muted focus:outline-none focus:ring-2 focus:ring-cyan shadow-sm transition-all duration-300"
-    >
-      <option value="">Todos los artistas</option>
-      <option *ngFor="let artista of artistasUnicos" [value]="artista">{{ artista }}</option>
-    </select>
+      <!-- Filtro por Artista -->
+      <select
+        [(ngModel)]="filtroArtista"
+        (change)="onFiltroChange()"
+        class="bg-[#2a2a2a]/70 border border-white/20 text-light rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-cyan shadow-md backdrop-blur-md transition-all duration-300"
+      >
+        <option value="">Todos los artistas</option>
+        <option *ngFor="let artista of artistasUnicos" [value]="artista">{{ artista }}</option>
+      </select>
 
-    <!-- Filtro por Género -->
-    <select
-      [(ngModel)]="filtroGenero"
-      (change)="onFiltroChange()"
-      class="bg-[#1e1e1e] text-light rounded-lg px-4 py-3 border border-muted focus:outline-none focus:ring-2 focus:ring-cyan shadow-sm transition-all duration-300"
-    >
-      <option value="">Todos los géneros</option>
-      <option *ngFor="let genero of generosUnicos" [value]="genero">{{ genero }}</option>
-    </select>
+      <!-- Filtro por Género -->
+      <select
+        [(ngModel)]="filtroGenero"
+        (change)="onFiltroChange()"
+        class="bg-[#2a2a2a]/70 border border-white/20 text-light rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-cyan shadow-md backdrop-blur-md transition-all duration-300"
+      >
+        <option value="">Todos los géneros</option>
+        <option *ngFor="let genero of generosUnicos" [value]="genero">{{ genero }}</option>
+      </select>
 
-    <!-- Ordenamiento -->
-    <select
-      [(ngModel)]="ordenSeleccionado"
-      (change)="onFiltroChange()"
-      class="bg-[#1e1e1e] text-light rounded-lg px-4 py-3 border border-muted focus:outline-none focus:ring-2 focus:ring-cyan shadow-sm transition-all duration-300"
-    >
-      <option value="">Ordenar por...</option>
-      <option value="titulo">Título (A-Z)</option>
-      <option value="artista">Artista (A-Z)</option>
-      <option value="duracion">Duración (menor a mayor)</option>
-    </select>
+      <!-- Ordenamiento -->
+      <select
+        [(ngModel)]="ordenSeleccionado"
+        (change)="onFiltroChange()"
+        class="bg-[#2a2a2a]/70 border border-white/20 text-light rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-cyan shadow-md backdrop-blur-md transition-all duration-300"
+      >
+        <option value="">Ordenar por...</option>
+        <option value="titulo">Título (A-Z)</option>
+        <option value="artista">Artista (A-Z)</option>
+        <option value="duracion">Duración (menor a mayor)</option>
+      </select>
+    </div>
   </div>
 
   <!-- Botón agregar canción -->
   <div *ngIf="uidActual" class="mb-10">
     <a routerLink="/home/nueva">
       <button
-        class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105"
+        class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105 shadow-md"
       >
-        Agregar Nueva Canción
+         Agregar Nueva Canción
       </button>
     </a>
   </div>
@@ -63,7 +65,7 @@
   <div *ngIf="cancionesFiltradas.length > 0; else sinCanciones"
        class="grid gap-6"
        style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
-       
+
     <div
       *ngFor="let cancion of cancionesFiltradas"
       class="bg-[#1e1e1e] hover:bg-[#2a2a2a] hover:border hover:border-cyan rounded-xl p-4 shadow-md hover:shadow-xl transform hover:scale-[1.03] transition-all duration-300 ease-in-out opacity-0 animate-fade-in"

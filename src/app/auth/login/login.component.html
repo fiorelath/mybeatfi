@@ -1,19 +1,46 @@
-<h2>🔓 Iniciar Sesión</h2>
+<div class="max-w-md mx-auto px-6 py-10 animate-fade-in">
+  <h2 class="text-3xl font-bold text-electric mb-8 text-center">Iniciar Sesión</h2>
 
-<form [formGroup]="loginForm" (ngSubmit)="ingresar()">
-  <label>Email:</label>
-  <input type="email" formControlName="email">
+  <form [formGroup]="loginForm" (ngSubmit)="ingresar()" class="space-y-6">
 
-  <label>Contraseña:</label>
-  <input type="password" formControlName="password">
+    <!-- 📧 Email -->
+    <div>
+      <label class="block text-sm font-medium text-light mb-1">Correo electrónico</label>
+      <input
+        type="email"
+        formControlName="email"
+        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-electric transition-all"
+        placeholder="tu@correo.com"
+      />
+    </div>
 
-  <button type="submit" [disabled]="cargando">Entrar</button>
+    <!-- 🔒 Contraseña -->
+    <div>
+      <label class="block text-sm font-medium text-light mb-1">Contraseña</label>
+      <input
+        type="password"
+        formControlName="password"
+        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-electric transition-all"
+        placeholder="••••••••"
+      />
+    </div>
 
-  <p *ngIf="error" style="color:red">{{ error }}</p>
-</form>
+    <!-- 🔘 Botón Iniciar sesión -->
+    <button
+      type="submit"
+      [disabled]="cargando"
+      class="w-full bg-electric text-primary font-semibold px-6 py-2 rounded-xl hover:bg-cyan transition disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Iniciar Sesión
+    </button>
 
-<!-- ✅ Enlace al registro -->
-<p>
-  ¿No tienes una cuenta?
-  <a routerLink="/login/registro">Regístrate aquí</a>
-</p>
+    <!-- ⚠️ Error -->
+    <p *ngIf="error" class="text-red-400 text-sm text-center">{{ error }}</p>
+  </form>
+
+  <!-- 🔗 Registro -->
+  <p class="text-center text-sm text-muted mt-6">
+    ¿No tienes una cuenta?
+    <a routerLink="/login/registro" class="text-electric hover:underline">Regístrate aquí</a>
+  </p>
+</div>

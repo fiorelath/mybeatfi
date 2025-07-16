@@ -13,8 +13,10 @@ export class CancionFormComponent implements OnInit {
   cancionForm: FormGroup;
   guardando = false;
   mensaje = '';
+  mostrarToaster = false;
   idEnEdicion: string | null = null;
   uidOriginal: string | null = null;
+  imagenPreview: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -33,13 +35,18 @@ export class CancionFormComponent implements OnInit {
         Validators.pattern(/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/i)
       ]]
     });
+
+    // Actualiza vista previa en tiempo real
+    this.cancionForm.get('imagenUrl')?.valueChanges.subscribe(valor => {
+      this.imagenPreview = valor;
+    });
   }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.idEnEdicion = id;
-      this.mensaje = '📝 Editando canción';
+      this.mensaje = 'Editando canción';
 
       this.cancionesService.obtenerCancionPorId(id).subscribe((cancion: Cancion) => {
         if (cancion) {
@@ -56,11 +63,14 @@ export class CancionFormComponent implements OnInit {
             genero: cancion.genero,
             imagenUrl: cancion.imagenUrl
           });
+
+          this.imagenPreview = cancion.imagenUrl;
         }
       });
     }
   }
 
+  // Getters para validaciones
   get titulo() { return this.cancionForm.get('titulo')!; }
   get artista() { return this.cancionForm.get('artista')!; }
   get minutos() { return this.cancionForm.get('minutos')!; }
@@ -71,23 +81,22 @@ export class CancionFormComponent implements OnInit {
   guardar(): void {
     if (!this.cancionForm.valid) {
       this.cancionForm.markAllAsTouched();
-      this.mensaje = '❌ Por favor, corrige los errores antes de guardar.';
+      this.mostrarMensaje('❌ Corrige los errores antes de guardar.');
       return;
     }
 
     this.guardando = true;
-    this.mensaje = '';
 
     const uidActual = this.authService.uidActual;
     if (!uidActual) {
-      this.mensaje = '❌ No estás autenticada. Inicia sesión para guardar canciones.';
+      this.mostrarMensaje('❌ Debes iniciar sesión para guardar canciones.');
       this.guardando = false;
       return;
     }
 
     const minutos = this.cancionForm.value.minutos;
     const segundos = this.cancionForm.value.segundos;
-    const duracion = +(minutos + segundos / 60).toFixed(2); // Ej: 3 + 30/60 = 3.50
+    const duracion = +(minutos + segundos / 60).toFixed(2);
 
     const datosCancion: Cancion = {
       titulo: this.cancionForm.value.titulo,
@@ -104,22 +113,32 @@ export class CancionFormComponent implements OnInit {
 
     accion
       .then(() => {
-        this.mensaje = this.idEnEdicion
-          ? '✅ ¡Canción actualizada exitosamente!'
+        const mensajeExito = this.idEnEdicion
+          ? '✅ ¡Canción actualizada correctamente!'
           : '🎉 ¡Canción guardada exitosamente!';
+        this.mostrarMensaje(mensajeExito);
         if (!this.idEnEdicion) this.resetFormulario();
       })
       .catch(error => {
-        console.error('❌ Error:', error);
-        this.mensaje = '❌ Ocurrió un error al guardar.';
+        console.error('❌ Error al guardar canción:', error);
+        this.mostrarMensaje('❌ Ocurrió un error al guardar.');
       })
       .finally(() => this.guardando = false);
   }
 
   resetFormulario(): void {
     this.cancionForm.reset();
+    this.imagenPreview = '';
     if (!this.idEnEdicion) {
       this.idEnEdicion = null;
     }
+  }
+
+  mostrarMensaje(texto: string): void {
+    this.mensaje = texto;
+    this.mostrarToaster = true;
+    setTimeout(() => {
+      this.mostrarToaster = false;
+    }, 3000);
   }
 }

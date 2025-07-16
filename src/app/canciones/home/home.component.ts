@@ -30,8 +30,12 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.uidActual = this.authService.uidActual;
+    // ✅ Obtener UID del usuario de forma reactiva
+    this.authService.usuarioActual$.subscribe(usuario => {
+      this.uidActual = usuario?.uid ?? null;
+    });
 
+    // ✅ Cargar canciones y aplicar filtros
     this.cancionesService.obtenerCanciones().subscribe(canciones => {
       this.cancionesOriginales = canciones;
       this.actualizarOpcionesUnicas();

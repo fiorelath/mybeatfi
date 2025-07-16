@@ -1,25 +1,88 @@
-<h2>📝 Registro</h2>
+<div class="max-w-md mx-auto p-6 bg-primary rounded-2xl shadow-xl animate-fade-in">
+  <h2 class="text-3xl font-semibold text-center text-cyan mb-6">Crear Cuenta</h2>
 
-<form [formGroup]="registroForm" (ngSubmit)="registrar()">
-  <div>
-    <label for="email">Correo electrónico:</label>
-    <input type="email" id="email" formControlName="email">
-    <div *ngIf="email?.touched && email?.invalid" style="color: red;">
-      <small *ngIf="email?.errors?.['required']">El correo es obligatorio.</small>
-      <small *ngIf="email?.errors?.['email']">Correo inválido.</small>
+  <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="space-y-5">
+
+    <!-- 📧 Email -->
+    <div>
+      <label for="email" class="block mb-1 text-light">Correo electrónico</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        placeholder="usuario@ejemplo.com"
+        class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-light placeholder-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+      />
+      <div *ngIf="email?.touched && email?.invalid" class="text-red-400 text-sm mt-1">
+        <small *ngIf="email?.errors?.['required']">El correo es obligatorio.</small>
+        <small *ngIf="email?.errors?.['email']">Correo inválido.</small>
+      </div>
     </div>
-  </div>
 
-  <div>
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" formControlName="password">
-    <div *ngIf="password?.touched && password?.invalid" style="color: red;">
-      <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria.</small>
-      <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres.</small>
+    <!-- 🔒 Contraseña -->
+    <div>
+      <label for="password" class="block mb-1 text-light">Contraseña</label>
+      <div class="relative">
+        <input
+          [type]="mostrarPassword ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+          placeholder="Mínimo 6 caracteres"
+          class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-light placeholder-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+        />
+        <button type="button"
+          (click)="mostrarPassword = !mostrarPassword"
+          class="absolute right-3 top-2 text-sm text-muted hover:text-cyan"
+        >
+          {{ mostrarPassword ? 'Ocultar' : 'Mostrar' }}
+        </button>
+      </div>
+      <div *ngIf="password?.touched && password?.invalid" class="text-red-400 text-sm mt-1">
+        <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria.</small>
+        <small *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres.</small>
+      </div>
     </div>
-  </div>
 
-  <button type="submit" [disabled]="cargando">Registrarse</button>
-</form>
+    <!-- ✅ Confirmar contraseña -->
+    <div>
+      <label for="confirmarPassword" class="block mb-1 text-light">Confirmar Contraseña</label>
+      <div class="relative">
+        <input
+          [type]="mostrarConfirmacion ? 'text' : 'password'"
+          id="confirmarPassword"
+          formControlName="confirmarPassword"
+          placeholder="Repite la contraseña"
+          class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-light placeholder-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+        />
+        <button type="button"
+          (click)="mostrarConfirmacion = !mostrarConfirmacion"
+          class="absolute right-3 top-2 text-sm text-muted hover:text-cyan"
+        >
+          {{ mostrarConfirmacion ? 'Ocultar' : 'Mostrar' }}
+        </button>
+      </div>
+      <div *ngIf="confirmarPassword?.touched && confirmarPassword?.invalid || registroForm.hasError('mismatch')" class="text-red-400 text-sm mt-1">
+        <small *ngIf="confirmarPassword?.errors?.['required']">La confirmación es obligatoria.</small>
+        <small *ngIf="registroForm.hasError('mismatch')">Las contraseñas no coinciden.</small>
+      </div>
+    </div>
 
-<p *ngIf="mensaje" style="margin-top: 12px;">{{ mensaje }}</p>
+    <!-- Botón de Registro -->
+    <button
+      type="submit"
+      [disabled]="cargando"
+      class="w-full bg-electric hover:bg-cyan text-black font-semibold py-2 rounded-lg transition duration-200"
+    >
+      Registrarse
+    </button>
+
+    <!-- Mensaje de feedback -->
+    <p *ngIf="mensaje" class="text-center text-light mt-3">{{ mensaje }}</p>
+  </form>
+
+  <!-- Enlace a login -->
+  <p class="text-center text-sm text-muted mt-6">
+    ¿Ya tienes una cuenta?
+    <a routerLink="/login" class="text-cyan underline hover:text-electric">Inicia sesión</a>
+  </p>
+</div>

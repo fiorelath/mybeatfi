@@ -1,53 +1,124 @@
-<h2>{{ idEnEdicion ? '📝 Editar Canción' : '🎶 Agregar Canción' }}</h2>
+<div class="px-6 py-8 max-w-3xl mx-auto">
+  <!-- Título -->
+  <h2 class="text-3xl font-bold text-electric mb-8">
+    {{ idEnEdicion ? 'Editar Canción' : 'Agregar Canción' }}
+  </h2>
 
-<form [formGroup]="cancionForm" (ngSubmit)="guardar()" novalidate>
-
-  <label for="titulo">Título:</label>
-  <input id="titulo" formControlName="titulo" />
-  <div *ngIf="titulo.touched && titulo.invalid" class="error">
-    <small *ngIf="titulo.errors?.['required']">El título es obligatorio.</small>
-    <small *ngIf="titulo.errors?.['minlength']">Mínimo 2 caracteres.</small>
-    <small *ngIf="titulo.errors?.['maxlength']">Máximo 50 caracteres.</small>
-  </div>
-
-  <label for="artista">Artista:</label>
-  <input id="artista" formControlName="artista" />
-  <div *ngIf="artista.touched && artista.invalid" class="error">
-    <small *ngIf="artista.errors?.['required']">El artista es obligatorio.</small>
-  </div>
-
-  <label>Duración:</label>
-  <div style="display: flex; gap: 8px;">
+  <form
+    [formGroup]="cancionForm"
+    (ngSubmit)="guardar()"
+    class="bg-white/10 backdrop-blur-md p-6 rounded-2xl shadow-md border border-white/20 space-y-6"
+    novalidate
+  >
+    <!-- Título -->
     <div>
-      <input type="number" id="minutos" formControlName="minutos" placeholder="Minutos" min="0" />
+      <label for="titulo" class="block text-light mb-1">Título</label>
+      <input
+        id="titulo"
+        formControlName="titulo"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+      />
+      <div *ngIf="titulo.touched && titulo.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="titulo.errors?.['required']">El título es obligatorio.</small>
+        <small *ngIf="titulo.errors?.['minlength']">Mínimo 2 caracteres.</small>
+        <small *ngIf="titulo.errors?.['maxlength']">Máximo 50 caracteres.</small>
+      </div>
     </div>
+
+    <!-- Artista -->
     <div>
-      <input type="number" id="segundos" formControlName="segundos" placeholder="Segundos" min="0" max="59" />
+      <label for="artista" class="block text-light mb-1">Artista</label>
+      <input
+        id="artista"
+        formControlName="artista"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+      />
+      <div *ngIf="artista.touched && artista.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="artista.errors?.['required']">El artista es obligatorio.</small>
+      </div>
+    </div>
+
+    <!-- Duración -->
+    <div>
+      <label class="block text-light mb-1">Duración</label>
+      <div class="flex gap-4">
+        <input
+          type="number"
+          id="minutos"
+          formControlName="minutos"
+          min="0"
+          placeholder="Min"
+          class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+        />
+        <input
+          type="number"
+          id="segundos"
+          formControlName="segundos"
+          min="0"
+          max="59"
+          placeholder="Seg"
+          class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+        />
+      </div>
+      <div *ngIf="minutos.touched && minutos.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="minutos.errors?.['required']">Los minutos son obligatorios.</small>
+      </div>
+      <div *ngIf="segundos.touched && segundos.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="segundos.errors?.['required']">Los segundos son obligatorios.</small>
+        <small *ngIf="segundos.errors?.['max']">Máximo 59 segundos.</small>
+      </div>
+    </div>
+
+    <!-- Género -->
+    <div>
+      <label for="genero" class="block text-light mb-1">Género</label>
+      <input
+        id="genero"
+        formControlName="genero"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+      />
+      <div *ngIf="genero.touched && genero.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="genero.errors?.['required']">El género es obligatorio.</small>
+      </div>
+    </div>
+
+    <!-- Imagen URL -->
+    <div>
+      <label for="imagenUrl" class="block text-light mb-1">URL de Imagen</label>
+      <input
+        id="imagenUrl"
+        formControlName="imagenUrl"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+      />
+      <div *ngIf="imagenUrl.touched && imagenUrl.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="imagenUrl.errors?.['required']">La imagen es obligatoria.</small>
+        <small *ngIf="imagenUrl.errors?.['pattern']">Debe ser una URL válida de imagen.</small>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-between items-center pt-4">
+      <button
+        type="submit"
+        [disabled]="cancionForm.invalid"
+        class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{ idEnEdicion ? 'Actualizar' : 'Guardar' }}
+      </button>
+      <button
+        type="button"
+        (click)="resetFormulario()"
+        class="text-light border border-light hover:border-cyan px-4 py-2 rounded-xl hover:text-cyan transition"
+      >
+        Limpiar
+      </button>
+    </div>
+  </form>
+
+  <!-- ✅ Toaster flotante -->
+  <div *ngIf="mostrarToaster" class="fixed bottom-6 right-6 z-50">
+    <div class="bg-cyan text-primary px-6 py-3 rounded-xl shadow-xl animate-fade-in">
+      {{ mensaje }}
     </div>
   </div>
-  <div *ngIf="minutos.touched && minutos.invalid" class="error">
-    <small *ngIf="minutos.errors?.['required']">Los minutos son obligatorios.</small>
-  </div>
-  <div *ngIf="segundos.touched && segundos.invalid" class="error">
-    <small *ngIf="segundos.errors?.['required']">Los segundos son obligatorios.</small>
-    <small *ngIf="segundos.errors?.['max']">No puede exceder 59 segundos.</small>
-  </div>
-
-  <label for="genero">Género:</label>
-  <input id="genero" formControlName="genero" />
-  <div *ngIf="genero.touched && genero.invalid" class="error">
-    <small *ngIf="genero.errors?.['required']">El género es obligatorio.</small>
-  </div>
-
-  <label for="imagenUrl">Imagen URL:</label>
-  <input id="imagenUrl" formControlName="imagenUrl" />
-  <div *ngIf="imagenUrl.touched && imagenUrl.invalid" class="error">
-    <small *ngIf="imagenUrl.errors?.['required']">La imagen es obligatoria.</small>
-    <small *ngIf="imagenUrl.errors?.['pattern']">Debe ser una URL válida (.jpg, .png, etc.).</small>
-  </div>
-
-  <button type="submit" [disabled]="cancionForm.invalid">{{ idEnEdicion ? 'Actualizar' : 'Guardar' }} Canción</button>
-  <button type="button" (click)="resetFormulario()">Limpiar</button>
-</form>
-
-<p *ngIf="mensaje">{{ mensaje }}</p>
+</div>

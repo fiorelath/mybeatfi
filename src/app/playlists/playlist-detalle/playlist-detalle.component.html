@@ -1,22 +1,41 @@
-<h2>🎵 Detalles de Playlist</h2>
+<div class="px-6 py-10 max-w-5xl mx-auto">
+  <!-- Título -->
+  <h2 class="text-3xl font-bold text-electric mb-6">Detalles de la Playlist</h2>
 
-<div *ngIf="!cargando; else cargandoTemplate">
-  <h3>{{ playlist.nombre }}</h3>
-  <p>{{ playlist.descripcion }}</p>
-
-  <h4>🎶 Canciones:</h4>
-  <ul *ngIf="cancionesDePlaylist.length > 0; else sinCanciones">
-    <li *ngFor="let cancion of cancionesDePlaylist">
-      <strong>{{ cancion.titulo }}</strong> - {{ cancion.artista }}<br>
-      <img [src]="cancion.imagenUrl" alt="imagen de {{ cancion.titulo }}" width="120"><br><br>
-    </li>
-  </ul>
-
-  <ng-template #sinCanciones>
-    <p>Esta playlist no tiene canciones.</p>
+  <!-- Cargando -->
+  <ng-template #cargandoTemplate>
+    <p class="text-muted">Cargando detalles de la playlist...</p>
   </ng-template>
-</div>
 
-<ng-template #cargandoTemplate>
-  <p>Cargando detalles de la playlist...</p>
-</ng-template>
+  <!-- Contenido -->
+  <div *ngIf="!cargando; else cargandoTemplate"
+       class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-md animate-fade-in">
+
+    <!-- Nombre y descripción -->
+    <h3 class="text-2xl font-semibold text-light mb-2">{{ playlist.nombre }}</h3>
+    <p class="text-muted mb-6">{{ playlist.descripcion }}</p>
+
+    <!-- Canciones -->
+    <h4 class="text-xl font-semibold text-light mb-4">Canciones en la playlist:</h4>
+
+    <div *ngIf="cancionesDePlaylist.length > 0; else sinCanciones"
+         class="grid gap-6"
+         style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+
+      <div *ngFor="let cancion of cancionesDePlaylist"
+           class="bg-[#1e1e1e] hover:bg-[#2a2a2a] rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300">
+
+        <img [src]="cancion.imagenUrl" [alt]="cancion.titulo"
+             class="w-full h-40 object-cover rounded-lg mb-3">
+
+        <h5 class="text-lg font-semibold text-light truncate">{{ cancion.titulo }}</h5>
+        <p class="text-sm text-muted truncate">{{ cancion.artista }}</p>
+      </div>
+    </div>
+
+    <!-- Si no hay canciones -->
+    <ng-template #sinCanciones>
+      <p class="text-muted mt-6">Esta playlist no tiene canciones aún.</p>
+    </ng-template>
+  </div>
+</div>

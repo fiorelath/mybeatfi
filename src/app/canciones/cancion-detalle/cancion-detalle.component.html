@@ -1,22 +1,62 @@
-<div *ngIf="cancion">
-  <h2>{{ cancion.titulo }}</h2>
-  <p><strong>Artista:</strong> {{ cancion.artista }}</p>
-  <p><strong>Género:</strong> {{ cancion.genero }}</p>
-  <p><strong>Duración:</strong> {{ cancion.duracion | duracion }}</p>
+<div *ngIf="cancion; else cargando" class="max-w-4xl mx-auto px-6 py-10">
 
-  <img [src]="cancion.imagenUrl" alt="Imagen de {{ cancion.titulo }}" width="200" />
+  <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl grid gap-8 lg:grid-cols-2 items-center animate-fade-in">
 
-  <!-- ✅ Mostrar los botones solo si el usuario actual es el dueño -->
-  <div *ngIf="uidActual && cancion.uid === uidActual" style="margin-top: 16px;">
-    <a [routerLink]="['/home/editar', cancion.id]">
-      <button>✏️ Editar</button>
-    </a>
-    <button (click)="eliminar()" style="background-color: red; color: white; margin-left: 8px;">
-      🗑️ Eliminar
-    </button>
+    <!-- 🎵 Imagen de la canción -->
+    <div>
+      <img
+        [src]="cancion.imagenUrl"
+        [alt]="'Imagen de ' + cancion.titulo"
+        class="w-full h-64 object-cover rounded-xl shadow-lg"
+      />
+    </div>
+
+    <!-- 🎧 Detalles -->
+    <div class="space-y-4">
+      <h2 class="text-3xl font-extrabold text-electric tracking-tight">{{ cancion.titulo }}</h2>
+
+      <p class="text-light text-lg"><span class="text-muted font-medium">Artista:</span> {{ cancion.artista }}</p>
+      <p class="text-light text-lg"><span class="text-muted font-medium">Género:</span> {{ cancion.genero }}</p>
+      <p class="text-light text-lg"><span class="text-muted font-medium">Duración:</span> {{ cancion.duracion | duracion }}</p>
+
+      <!-- Barra de progreso visual (simulada) -->
+      <div class="mt-4">
+        <div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+          <div class="bg-cyan h-full animate-pulse w-2/3 rounded-full"></div>
+        </div>
+        <div class="flex justify-between text-xs text-muted mt-1">
+          <span>0:00</span>
+          <span>{{ cancion.duracion | duracion }}</span>
+        </div>
+      </div>
+
+      <!-- Botones: solo si es del usuario -->
+      <div *ngIf="uidActual && cancion.uid === uidActual" class="flex items-center gap-4 mt-6">
+        <!-- Botón Editar -->
+        <a [routerLink]="['/home/editar', cancion.id]" title="Editar">
+          <button class="text-cyan hover:text-electric transition text-xl">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+        </a>
+
+        <!-- Botón Eliminar -->
+        <button (click)="eliminar()" title="Eliminar" class="text-red-500 hover:text-red-600 transition text-xl">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información adicional simulada -->
+  <div class="mt-10 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-md space-y-4 text-light">
+    <h3 class="text-xl font-bold mb-2">Descripción</h3>
+    <p class="text-sm text-muted">
+      Esta canción forma parte del catálogo de MyBeatFy. 
+    </p>
   </div>
 </div>
 
+<!-- 🔄 Mientras carga -->
 <ng-template #cargando>
-  <p>Cargando información de la canción...</p>
+  <p class="text-center text-muted mt-20 text-lg">Cargando información de la canción...</p>
 </ng-template>

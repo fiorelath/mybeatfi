@@ -13,6 +13,9 @@ export class RegistroComponent {
   mensaje: string = '';
   cargando: boolean = false;
 
+  mostrarPassword = false;
+  mostrarConfirmacion = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -20,16 +23,29 @@ export class RegistroComponent {
   ) {
     this.registroForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmarPassword: ['', [Validators.required]]
+    }, { validator: this.verificarCoincidencia });
   }
 
+  // ✅ Getters
   get email() {
     return this.registroForm.get('email');
   }
 
   get password() {
     return this.registroForm.get('password');
+  }
+
+  get confirmarPassword() {
+    return this.registroForm.get('confirmarPassword');
+  }
+
+  // ✅ Verifica que las contraseñas coincidan
+  verificarCoincidencia(form: FormGroup) {
+    const pass = form.get('password')?.value;
+    const confirm = form.get('confirmarPassword')?.value;
+    return pass === confirm ? null : { mismatch: true };
   }
 
   registrar() {
@@ -45,7 +61,7 @@ export class RegistroComponent {
         })
         .catch(error => {
           console.error(error);
-          this.mensaje = '❌ ' + (error.code ? this.traducirError(error.code) : 'Error inesperado. Verifica tu conexión o intenta más tarde.');
+          this.mensaje = '❌ ' + (error.code ? this.traducirError(error.code) : 'Error inesperado.');
         })
         .finally(() => {
           this.cargando = false;

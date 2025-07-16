@@ -1,50 +1,81 @@
-<h2>🎶 {{ idEnEdicion ? 'Editar Playlist' : 'Crear Nueva Playlist' }}</h2>
+<div class="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
+  <h2 class="text-3xl font-bold text-electric mb-6">
+    {{ idEnEdicion ? 'Editar Playlist' : 'Crear Nueva Playlist' }}
+  </h2>
 
-<form [formGroup]="playlistForm" (ngSubmit)="guardar()">
+  <form [formGroup]="playlistForm" (ngSubmit)="guardar()" class="space-y-6">
 
-  <!-- 🎵 Campo: Nombre -->
-  <div>
-    <label for="nombre">Nombre:</label>
-    <input id="nombre" type="text" formControlName="nombre" />
-    <div *ngIf="nombre.touched && nombre.invalid" style="color: red;">
-      <small *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</small>
-      <small *ngIf="nombre.errors?.['minlength']">Mínimo 2 caracteres.</small>
-    </div>
-  </div>
-
-  <!-- 📝 Campo: Descripción -->
-  <div>
-    <label for="descripcion">Descripción:</label>
-    <textarea id="descripcion" formControlName="descripcion"></textarea>
-  </div>
-
-  <!-- 🎧 Selección de canciones -->
-  <div>
-    <label>Canciones:</label>
-    <div *ngIf="cancionesDisponibles.length > 0; else sinCanciones">
-      <div *ngFor="let cancion of cancionesDisponibles">
-        <ng-container *ngIf="cancion.id as id">
-          <label>
-            <input
-              type="checkbox"
-              [value]="id"
-              (change)="toggleCancion(id, $event)"
-              [checked]="playlistForm.get('canciones')?.value.includes(id)"
-            />
-            {{ cancion.titulo }} - {{ cancion.artista }}
-          </label>
-        </ng-container>
+    <!-- 📝 Nombre -->
+    <div>
+      <label for="nombre" class="block text-sm font-semibold mb-1 text-light">Nombre</label>
+      <input
+        id="nombre"
+        type="text"
+        formControlName="nombre"
+        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-electric transition-all duration-300"
+      />
+      <div *ngIf="nombre.touched && nombre.invalid" class="text-red-400 text-sm mt-1">
+        <small *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</small>
+        <small *ngIf="nombre.errors?.['minlength']">Mínimo 2 caracteres.</small>
       </div>
     </div>
-    <ng-template #sinCanciones>
-      <p>No hay canciones disponibles para seleccionar.</p>
-    </ng-template>
-  </div>
 
-  <!-- 💾 Botón Guardar -->
-  <button type="submit" [disabled]="guardando">💾 Guardar</button>
+    <!-- 📄 Descripción -->
+    <div>
+      <label for="descripcion" class="block text-sm font-semibold mb-1 text-light">Descripción</label>
+      <textarea
+        id="descripcion"
+        formControlName="descripcion"
+        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-electric transition-all duration-300 resize-none"
+        rows="3"
+      ></textarea>
+    </div>
 
-  <!-- 📢 Mensaje -->
-  <p *ngIf="mensaje" style="margin-top: 12px;">{{ mensaje }}</p>
+    <!-- 🎵 Canciones disponibles -->
+    <div>
+      <label class="block text-sm font-semibold mb-2 text-light">Canciones</label>
 
-</form>
+      <div *ngIf="cancionesDisponibles.length > 0; else sinCanciones" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+        <div
+          *ngFor="let cancion of cancionesDisponibles"
+          class="flex items-center gap-3 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition"
+        >
+          <input
+            type="checkbox"
+            [value]="cancion.id!"
+            (change)="toggleCancion(cancion.id!, $event)"
+            [checked]="playlistForm.get('canciones')?.value.includes(cancion.id)"
+            class="accent-cyan w-4 h-4"
+          />
+          <label class="text-light text-sm">{{ cancion.titulo }} - {{ cancion.artista }}</label>
+        </div>
+      </div>
+
+      <ng-template #sinCanciones>
+        <p class="text-muted">No hay canciones disponibles para seleccionar.</p>
+      </ng-template>
+    </div>
+
+    <!-- ✅ Botón Guardar -->
+    <div class="flex gap-4">
+      <button
+        type="submit"
+        [disabled]="guardando"
+        class="bg-electric text-primary font-semibold px-6 py-2 rounded-xl hover:bg-cyan transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Guardar Playlist
+      </button>
+
+      <button
+        type="button"
+        class="bg-white/10 text-light font-medium px-6 py-2 rounded-xl hover:bg-white/20 transition"
+        (click)="playlistForm.reset()"
+      >
+        Limpiar
+      </button>
+    </div>
+
+    <!-- 💬 Mensaje -->
+    <p *ngIf="mensaje" class="text-sm text-light mt-4">{{ mensaje }}</p>
+  </form>
+</div>
