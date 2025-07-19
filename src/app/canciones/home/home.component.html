@@ -56,7 +56,7 @@
       <button
         class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105 shadow-md"
       >
-         Agregar Nueva Canción
+        Agregar Nueva Canción
       </button>
     </a>
   </div>
@@ -79,6 +79,14 @@
         <h3 class="text-lg font-bold truncate">{{ cancion.titulo }}</h3>
         <p class="text-sm text-muted">{{ cancion.artista }}</p>
       </a>
+
+      <!-- 🎵 Reproductor de Audio -->
+      <audio
+        *ngIf="cancion.audioUrl"
+        [src]="cancion.audioUrl"
+        controls
+        class="w-full mt-3 rounded-lg"
+      ></audio>
     </div>
   </div>
 

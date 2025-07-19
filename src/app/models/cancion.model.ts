@@ -7,4 +7,5 @@ export interface Cancion {
   url: string;
   imagen: string;
   fechaPublicacion: Date;
+  audioUrl: string;
 }

@@ -11,6 +11,7 @@ export interface Cancion {
   duracion: number;
   imagenUrl: string;
   uid?: string;
+  audioUrl: string;
 }
 
 @Injectable({

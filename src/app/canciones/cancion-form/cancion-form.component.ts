@@ -18,6 +18,9 @@ export class CancionFormComponent implements OnInit {
   uidOriginal: string | null = null;
   imagenPreview: string = '';
 
+  cloudName = 'dy4wbvkbv';
+  uploadPreset = 'misubida';
+
   constructor(
     private fb: FormBuilder,
     private cancionesService: CancionesService,
@@ -30,13 +33,10 @@ export class CancionFormComponent implements OnInit {
       minutos: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
       segundos: [0, [Validators.required, Validators.min(0), Validators.max(59)]],
       genero: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      imagenUrl: ['', [
-        Validators.required,
-        Validators.pattern(/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/i)
-      ]]
+      audioUrl: ['', [Validators.required]],
+      imagenUrl: ['', [Validators.required]]
     });
 
-    // Actualiza vista previa en tiempo real
     this.cancionForm.get('imagenUrl')?.valueChanges.subscribe(valor => {
       this.imagenPreview = valor;
     });
@@ -61,7 +61,8 @@ export class CancionFormComponent implements OnInit {
             minutos,
             segundos,
             genero: cancion.genero,
-            imagenUrl: cancion.imagenUrl
+            imagenUrl: cancion.imagenUrl,
+            audioUrl: cancion.audioUrl
           });
 
           this.imagenPreview = cancion.imagenUrl;
@@ -70,13 +71,46 @@ export class CancionFormComponent implements OnInit {
     }
   }
 
-  // Getters para validaciones
   get titulo() { return this.cancionForm.get('titulo')!; }
   get artista() { return this.cancionForm.get('artista')!; }
   get minutos() { return this.cancionForm.get('minutos')!; }
   get segundos() { return this.cancionForm.get('segundos')!; }
   get genero() { return this.cancionForm.get('genero')!; }
   get imagenUrl() { return this.cancionForm.get('imagenUrl')!; }
+  get audioUrl() { return this.cancionForm.get('audioUrl')!; }
+
+  async subirArchivo(event: any, tipo: 'imagen' | 'audio') {
+    const archivo = event.target.files[0];
+    if (!archivo) return;
+
+    const formData = new FormData();
+    formData.append('file', archivo);
+    formData.append('upload_preset', this.uploadPreset);
+
+    const url = tipo === 'imagen'
+      ? `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`
+      : `https://api.cloudinary.com/v1_1/${this.cloudName}/video/upload`;
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      if (tipo === 'imagen') {
+        this.cancionForm.patchValue({ imagenUrl: data.secure_url });
+        this.imagenPreview = data.secure_url;
+      } else {
+        this.cancionForm.patchValue({ audioUrl: data.secure_url });
+      }
+
+      this.mostrarMensaje(`✅ ${tipo === 'imagen' ? 'Imagen' : 'Audio'} subido con éxito`);
+    } catch (error) {
+      console.error(`Error subiendo ${tipo}:`, error);
+      this.mostrarMensaje(`❌ Error al subir ${tipo}`);
+    }
+  }
 
   guardar(): void {
     if (!this.cancionForm.valid) {
@@ -104,6 +138,7 @@ export class CancionFormComponent implements OnInit {
       duracion,
       genero: this.cancionForm.value.genero,
       imagenUrl: this.cancionForm.value.imagenUrl,
+      audioUrl: this.cancionForm.value.audioUrl,
       uid: this.idEnEdicion ? this.uidOriginal ?? uidActual : uidActual
     };
 

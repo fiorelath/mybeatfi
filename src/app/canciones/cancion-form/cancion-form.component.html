@@ -82,7 +82,7 @@
       </div>
     </div>
 
-    <!-- Imagen URL -->
+    <!-- URL de Imagen -->
     <div>
       <label for="imagenUrl" class="block text-light mb-1">URL de Imagen</label>
       <input
@@ -92,7 +92,47 @@
       />
       <div *ngIf="imagenUrl.touched && imagenUrl.invalid" class="text-sm text-red-400 mt-1">
         <small *ngIf="imagenUrl.errors?.['required']">La imagen es obligatoria.</small>
-        <small *ngIf="imagenUrl.errors?.['pattern']">Debe ser una URL válida de imagen.</small>
+      </div>
+    </div>
+
+    <!-- Subir Imagen -->
+    <div>
+      <label class="block text-light mb-1">Subir Imagen desde tu PC</label>
+      <input
+        type="file"
+        accept="image/*"
+        (change)="subirArchivo($event, 'imagen')"
+        class="text-white"
+      />
+      <div *ngIf="imagenPreview" class="mt-4">
+        <img [src]="imagenPreview" alt="Vista previa" class="w-48 h-auto rounded-xl shadow-md border border-white/20" />
+      </div>
+    </div>
+
+    <!-- URL de Audio -->
+    <div>
+      <label for="audioUrl" class="block text-light mb-1">URL de Audio</label>
+      <input
+        id="audioUrl"
+        formControlName="audioUrl"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+      />
+      <div *ngIf="audioUrl.touched && audioUrl.invalid" class="text-sm text-red-400 mt-1">
+        <small *ngIf="audioUrl.errors?.['required']">La URL del audio es obligatoria.</small>
+      </div>
+    </div>
+
+    <!-- Subir Audio -->
+    <div>
+      <label class="block text-light mb-1">Subir Audio desde tu PC</label>
+      <input
+        type="file"
+        accept="audio/*"
+        (change)="subirArchivo($event, 'audio')"
+        class="text-white"
+      />
+      <div *ngIf="audioUrl.value" class="mt-4">
+        <audio [src]="audioUrl.value" controls class="w-full mt-2 rounded-lg shadow" preload="none"></audio>
       </div>
     </div>
 
@@ -115,7 +155,7 @@
     </div>
   </form>
 
-  <!-- ✅ Toaster flotante -->
+  <!-- Toaster -->
   <div *ngIf="mostrarToaster" class="fixed bottom-6 right-6 z-50">
     <div class="bg-cyan text-primary px-6 py-3 rounded-xl shadow-xl animate-fade-in">
       {{ mensaje }}
