@@ -1,41 +1,73 @@
-<div class="px-6 py-10 max-w-5xl mx-auto">
-  <!-- Título -->
-  <h2 class="text-3xl font-bold text-electric mb-6">Detalles de la Playlist</h2>
+<div class="px-9 py-10 max-w-4xl mx-auto text-white space-y-10">
+  <!-- Título de la playlist -->
+  <section>
+    <h2 class="text-4xl font-bold text-electric mb-2">{{ playlist.nombre }}</h2>
+    <p class="text-gray-400">{{ playlist.descripcion }}</p>
+  </section>
 
-  <!-- Cargando -->
-  <ng-template #cargandoTemplate>
-    <p class="text-muted">Cargando detalles de la playlist...</p>
-  </ng-template>
+  <!-- Reproductor de Música -->
+  <section class="bg-gray-900 rounded-2xl shadow-lg p-8 space-y-6">
+    <h3 class="text-xl font-semibold text-center">Reproduciendo ahora</h3>
 
-  <!-- Contenido -->
-  <div *ngIf="!cargando; else cargandoTemplate"
-       class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-md animate-fade-in">
-
-    <!-- Nombre y descripción -->
-    <h3 class="text-2xl font-semibold text-light mb-2">{{ playlist.nombre }}</h3>
-    <p class="text-muted mb-6">{{ playlist.descripcion }}</p>
-
-    <!-- Canciones -->
-    <h4 class="text-xl font-semibold text-light mb-4">Canciones en la playlist:</h4>
-
-    <div *ngIf="cancionesDePlaylist.length > 0; else sinCanciones"
-         class="grid gap-6"
-         style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-
-      <div *ngFor="let cancion of cancionesDePlaylist"
-           class="bg-[#1e1e1e] hover:bg-[#2a2a2a] rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300">
-
-        <img [src]="cancion.imagenUrl" [alt]="cancion.titulo"
-             class="w-full h-40 object-cover rounded-lg mb-3">
-
-        <h5 class="text-lg font-semibold text-light truncate">{{ cancion.titulo }}</h5>
-        <p class="text-sm text-muted truncate">{{ cancion.artista }}</p>
-      </div>
+    <!-- Info canción actual -->
+    <div class="text-center space-y-1">
+      <p class="text-2xl font-bold text-turquoise">
+        {{ cancionesDePlaylist[cancionActualIndex].titulo || 'Sin canción' }}
+      </p>
+      <p class="text-gray-400">
+        {{ cancionesDePlaylist[cancionActualIndex].artista || '---' }}
+      </p>
+      <p class="text-sm text-gray-500">
+        Duración: {{ cancionesDePlaylist[cancionActualIndex].duracion || '---' }}
+      </p>
     </div>
 
-    <!-- Si no hay canciones -->
-    <ng-template #sinCanciones>
-      <p class="text-muted mt-6">Esta playlist no tiene canciones aún.</p>
-    </ng-template>
-  </div>
+    <!-- Controles del Reproductor -->
+    <div class="flex items-center justify-center gap-6 pt-4">
+      <!-- Anterior -->
+      <button (click)="cancionAnterior()" class="bg-electric hover:bg-gray-800 p-3 rounded-full shadow-md transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-9-7 9-7v14zM22 19l-9-7 9-7v14z" />
+        </svg>
+      </button>
+
+      <!-- Pausar / Reanudar -->
+      <button (click)="pausarOReanudar()" class="bg-gray-400 hover:bg-gray-800 p-3 rounded-full shadow-md transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <ng-container *ngIf="enReproduccion; else playIcon">
+            <path d="M6 4h4v16H6zm8 0h4v16h-4z" />
+          </ng-container>
+          <ng-template #playIcon>
+            <path d="M8 5v14l11-7z" />
+          </ng-template>
+        </svg>
+      </button>
+
+      <!-- Siguiente -->
+      <button (click)="siguienteCancion()" class="bg-electric hover:bg-gray-800 p-3 rounded-full shadow-md transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l9 7-9 7V5zM2 5l9 7-9 7V5z" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Lista de canciones -->
+  <section>
+    <h3 class="text-2xl font-semibold text-turquoise mb-4">Canciones</h3>
+    <ul class="space-y-2">
+      <li
+        *ngFor="let cancion of cancionesDePlaylist; let i = index"
+        (click)="reproducirCancion(i)"
+        [class.bg-gray-800]="i === cancionActualIndex"
+        class="cursor-pointer p-4 rounded-lg hover:bg-gray-800 transition flex justify-between items-center"
+      >
+        <div>
+          <p class="font-semibold">{{ cancion.titulo }}</p>
+          <p class="text-sm text-gray-400">{{ cancion.artista }}</p>
+        </div>
+        <span class="text-sm text-gray-400">{{ cancion.duracion }}</span>
+      </li>
+    </ul>
+  </section>
 </div>

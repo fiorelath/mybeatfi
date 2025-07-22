@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CancionesService, Cancion } from '../../servicios/canciones.service';
 import { AuthService } from 'src/app/servicios/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cancion-form',
@@ -25,12 +26,13 @@ export class CancionFormComponent implements OnInit {
     private fb: FormBuilder,
     private cancionesService: CancionesService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router 
   ) {
     this.cancionForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       artista: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      minutos: [0, [Validators.required, Validators.min(0), Validators.max(30)]],
+      minutos: [0, [Validators.required, Validators.min(0), Validators.max(4)]],
       segundos: [0, [Validators.required, Validators.min(0), Validators.max(59)]],
       genero: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       audioUrl: ['', [Validators.required]],
@@ -105,17 +107,17 @@ export class CancionFormComponent implements OnInit {
         this.cancionForm.patchValue({ audioUrl: data.secure_url });
       }
 
-      this.mostrarMensaje(`✅ ${tipo === 'imagen' ? 'Imagen' : 'Audio'} subido con éxito`);
+      this.mostrarMensaje(` ${tipo === 'imagen' ? 'Imagen' : 'Audio'} subido con éxito`);
     } catch (error) {
       console.error(`Error subiendo ${tipo}:`, error);
-      this.mostrarMensaje(`❌ Error al subir ${tipo}`);
+      this.mostrarMensaje(` Error al subir ${tipo}`);
     }
   }
 
   guardar(): void {
     if (!this.cancionForm.valid) {
       this.cancionForm.markAllAsTouched();
-      this.mostrarMensaje('❌ Corrige los errores antes de guardar.');
+      this.mostrarMensaje(' Corrige los errores antes de guardar.');
       return;
     }
 
@@ -123,7 +125,7 @@ export class CancionFormComponent implements OnInit {
 
     const uidActual = this.authService.uidActual;
     if (!uidActual) {
-      this.mostrarMensaje('❌ Debes iniciar sesión para guardar canciones.');
+      this.mostrarMensaje(' Debes iniciar sesión para guardar canciones.');
       this.guardando = false;
       return;
     }
@@ -149,9 +151,12 @@ export class CancionFormComponent implements OnInit {
     accion
       .then(() => {
         const mensajeExito = this.idEnEdicion
-          ? '✅ ¡Canción actualizada correctamente!'
-          : '🎉 ¡Canción guardada exitosamente!';
+          ? ' ¡Canción actualizada correctamente!'
+          : ' ¡Canción guardada exitosamente!';
         this.mostrarMensaje(mensajeExito);
+
+        // ✅ Redirigir luego de guardar
+        setTimeout(() => this.router.navigate(['/home']), 1500);
         if (!this.idEnEdicion) this.resetFormulario();
       })
       .catch(error => {

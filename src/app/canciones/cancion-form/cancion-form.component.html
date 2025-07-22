@@ -1,22 +1,23 @@
-<div class="px-6 py-8 max-w-3xl mx-auto">
+<div class="px-9 py-8 max-w-3xl mx-auto">
   <!-- Título -->
-  <h2 class="text-3xl font-bold text-electric mb-8">
+  <h2 class="mt-3 text-3xl font-bold text-electric mb-10 text-center">
     {{ idEnEdicion ? 'Editar Canción' : 'Agregar Canción' }}
   </h2>
 
   <form
     [formGroup]="cancionForm"
     (ngSubmit)="guardar()"
-    class="bg-white/10 backdrop-blur-md p-6 rounded-2xl shadow-md border border-white/20 space-y-6"
+    class="bg-[#1f1f1f]/70 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/20 space-y-6"
     novalidate
   >
     <!-- Título -->
     <div>
-      <label for="titulo" class="block text-light mb-1">Título</label>
+      <label for="titulo" class="block text-light mb-2 font-medium">Título</label>
       <input
         id="titulo"
         formControlName="titulo"
-        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+        placeholder="Nombre de la canción"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
       />
       <div *ngIf="titulo.touched && titulo.invalid" class="text-sm text-red-400 mt-1">
         <small *ngIf="titulo.errors?.['required']">El título es obligatorio.</small>
@@ -27,11 +28,12 @@
 
     <!-- Artista -->
     <div>
-      <label for="artista" class="block text-light mb-1">Artista</label>
+      <label for="artista" class="block text-light mb-2 font-medium">Artista</label>
       <input
         id="artista"
         formControlName="artista"
-        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+        placeholder="Nombre del artista"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
       />
       <div *ngIf="artista.touched && artista.invalid" class="text-sm text-red-400 mt-1">
         <small *ngIf="artista.errors?.['required']">El artista es obligatorio.</small>
@@ -40,7 +42,7 @@
 
     <!-- Duración -->
     <div>
-      <label class="block text-light mb-1">Duración</label>
+      <label class="block text-light mb-2 font-medium">Duración</label>
       <div class="flex gap-4">
         <input
           type="number"
@@ -48,7 +50,7 @@
           formControlName="minutos"
           min="0"
           placeholder="Min"
-          class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+          class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
         />
         <input
           type="number"
@@ -57,11 +59,12 @@
           min="0"
           max="59"
           placeholder="Seg"
-          class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan"
+          class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan"
         />
       </div>
       <div *ngIf="minutos.touched && minutos.invalid" class="text-sm text-red-400 mt-1">
         <small *ngIf="minutos.errors?.['required']">Los minutos son obligatorios.</small>
+        <small *ngIf="minutos.errors?.['max']">Máximo 4 minutos.</small>
       </div>
       <div *ngIf="segundos.touched && segundos.invalid" class="text-sm text-red-400 mt-1">
         <small *ngIf="segundos.errors?.['required']">Los segundos son obligatorios.</small>
@@ -71,68 +74,53 @@
 
     <!-- Género -->
     <div>
-      <label for="genero" class="block text-light mb-1">Género</label>
+      <label for="genero" class="block text-light mb-2 font-medium">Género</label>
       <input
         id="genero"
         formControlName="genero"
-        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
+        placeholder="Género de la canción"
+        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
       />
       <div *ngIf="genero.touched && genero.invalid" class="text-sm text-red-400 mt-1">
         <small *ngIf="genero.errors?.['required']">El género es obligatorio.</small>
       </div>
     </div>
 
-    <!-- URL de Imagen -->
-    <div>
-      <label for="imagenUrl" class="block text-light mb-1">URL de Imagen</label>
-      <input
-        id="imagenUrl"
-        formControlName="imagenUrl"
-        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
-      />
-      <div *ngIf="imagenUrl.touched && imagenUrl.invalid" class="text-sm text-red-400 mt-1">
-        <small *ngIf="imagenUrl.errors?.['required']">La imagen es obligatoria.</small>
-      </div>
-    </div>
-
-    <!-- Subir Imagen -->
-    <div>
-      <label class="block text-light mb-1">Subir Imagen desde tu PC</label>
+    <!-- Subida de Imagen -->
+    <div class="mb-6 p-6 rounded-2xl backdrop-blur-md bg-white/5 border border-white/20 shadow-md">
+      <label class="text-light font-semibold flex items-center gap-2 mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyan" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V9.414a2 2 0 00-.586-1.414l-4.414-4.414A2 2 0 0012.586 3H4zm8 1.414L17.586 10H14a1 1 0 01-1-1V4.414z" />
+        </svg>
+        Subir Imagen desde tu PC
+      </label>
       <input
         type="file"
         accept="image/*"
         (change)="subirArchivo($event, 'imagen')"
-        class="text-white"
+        class="block w-full text-sm text-light file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan file:text-black hover:file:bg-cyan/80 transition"
       />
       <div *ngIf="imagenPreview" class="mt-4">
-        <img [src]="imagenPreview" alt="Vista previa" class="w-48 h-auto rounded-xl shadow-md border border-white/20" />
+        <img [src]="imagenPreview" alt="Vista previa" class="w-60 h-auto rounded-xl border border-white/20 shadow-lg" />
       </div>
     </div>
 
-    <!-- URL de Audio -->
-    <div>
-      <label for="audioUrl" class="block text-light mb-1">URL de Audio</label>
-      <input
-        id="audioUrl"
-        formControlName="audioUrl"
-        class="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-light placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cyan transition-all duration-300"
-      />
-      <div *ngIf="audioUrl.touched && audioUrl.invalid" class="text-sm text-red-400 mt-1">
-        <small *ngIf="audioUrl.errors?.['required']">La URL del audio es obligatoria.</small>
-      </div>
-    </div>
-
-    <!-- Subir Audio -->
-    <div>
-      <label class="block text-light mb-1">Subir Audio desde tu PC</label>
+    <!-- Subida de Audio -->
+    <div class="p-6 rounded-2xl backdrop-blur-md bg-white/5 border border-white/20 shadow-md">
+      <label class="text-light font-semibold flex items-center gap-2 mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyan" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9 3v12.563c-.314-.044-.635-.063-.958-.063C5.71 15.5 3 18.072 3 21.25S5.71 27 8.042 27c2.088 0 3.858-1.646 3.987-3.75h.02V9.428l6-2.28v7.414c-.314-.044-.635-.063-.958-.063-2.332 0-4.042 2.572-4.042 5.75s1.71 5.75 4.042 5.75c2.088 0 3.858-1.646 3.987-3.75H21V3L9 7.25V3z"/>
+        </svg>
+        Subir Audio desde tu PC
+      </label>
       <input
         type="file"
         accept="audio/*"
         (change)="subirArchivo($event, 'audio')"
-        class="text-white"
+        class="block w-full text-sm text-light file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan file:text-black hover:file:bg-cyan/80 transition"
       />
       <div *ngIf="audioUrl.value" class="mt-4">
-        <audio [src]="audioUrl.value" controls class="w-full mt-2 rounded-lg shadow" preload="none"></audio>
+        <audio [src]="audioUrl.value" controls class="w-full rounded-lg shadow-lg" preload="none"></audio>
       </div>
     </div>
 
@@ -141,7 +129,7 @@
       <button
         type="submit"
         [disabled]="cancionForm.invalid"
-        class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="bg-cyan text-black px-6 py-3 rounded-xl font-semibold hover:bg-cyan/90 transform transition duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {{ idEnEdicion ? 'Actualizar' : 'Guardar' }}
       </button>
@@ -157,7 +145,7 @@
 
   <!-- Toaster -->
   <div *ngIf="mostrarToaster" class="fixed bottom-6 right-6 z-50">
-    <div class="bg-cyan text-primary px-6 py-3 rounded-xl shadow-xl animate-fade-in">
+    <div class="bg-cyan text-black px-6 py-3 rounded-xl shadow-xl animate-fade-in">
       {{ mensaje }}
     </div>
   </div>

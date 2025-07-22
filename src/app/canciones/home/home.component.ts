@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CancionesService, Cancion } from 'src/app/servicios/canciones.service';
 import { AuthService } from 'src/app/servicios/auth.service';
 import { Router } from '@angular/router';
@@ -23,6 +23,9 @@ export class HomeComponent implements OnInit {
   // 🔽 Ordenamiento
   ordenSeleccionado: string = '';
 
+  // 🎧 Control de audios
+  @ViewChildren('audioRef') audios!: QueryList<ElementRef<HTMLAudioElement>>;
+
   constructor(
     private cancionesService: CancionesService,
     private authService: AuthService,
@@ -30,12 +33,10 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ✅ Obtener UID del usuario de forma reactiva
     this.authService.usuarioActual$.subscribe(usuario => {
       this.uidActual = usuario?.uid ?? null;
     });
 
-    // ✅ Cargar canciones y aplicar filtros
     this.cancionesService.obtenerCanciones().subscribe(canciones => {
       this.cancionesOriginales = canciones;
       this.actualizarOpcionesUnicas();
@@ -81,7 +82,6 @@ export class HomeComponent implements OnInit {
       (this.filtroGenero ? c.genero === this.filtroGenero : true)
     );
 
-    // 🔽 Aplicar ordenamiento
     switch (this.ordenSeleccionado) {
       case 'titulo':
         resultado.sort((a, b) => a.titulo.localeCompare(b.titulo));
@@ -99,5 +99,14 @@ export class HomeComponent implements OnInit {
 
   onFiltroChange(): void {
     this.aplicarFiltros();
+  }
+
+  alReproducir(audioActual: HTMLAudioElement): void {
+    this.audios.forEach(audioElementRef => {
+      const audio = audioElementRef.nativeElement;
+      if (audio !== audioActual) {
+        audio.pause();
+      }
+    });
   }
 }

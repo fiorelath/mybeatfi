@@ -1,13 +1,10 @@
-<div class="px-6 py-8 max-w-6xl mx-auto">
+<div class="px-9 py-8 max-w-6xl mx-auto">
 
-  <!-- Título -->
-  <h2 class="text-3xl font-bold text-electric mb-8">Catálogo de Canciones</h2>
+  <h2 class="mt-7 text-3xl font-bold text-electric mb-8">Catálogo de Canciones</h2>
 
-  <!-- FILTROS MODERNOS con efecto vidrio -->
+  <!-- Filtros -->
   <div class="col-span-full bg-[#1a1a1a]/50 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/20 mb-10">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-      <!-- Buscador -->
       <input
         type="text"
         [(ngModel)]="terminoBusqueda"
@@ -16,7 +13,6 @@
         class="col-span-full bg-[#2a2a2a]/70 border border-white/20 text-light placeholder:text-muted rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-cyan shadow-md backdrop-blur-md transition-all duration-300"
       />
 
-      <!-- Filtro por Artista -->
       <select
         [(ngModel)]="filtroArtista"
         (change)="onFiltroChange()"
@@ -26,7 +22,6 @@
         <option *ngFor="let artista of artistasUnicos" [value]="artista">{{ artista }}</option>
       </select>
 
-      <!-- Filtro por Género -->
       <select
         [(ngModel)]="filtroGenero"
         (change)="onFiltroChange()"
@@ -36,7 +31,6 @@
         <option *ngFor="let genero of generosUnicos" [value]="genero">{{ genero }}</option>
       </select>
 
-      <!-- Ordenamiento -->
       <select
         [(ngModel)]="ordenSeleccionado"
         (change)="onFiltroChange()"
@@ -50,12 +44,10 @@
     </div>
   </div>
 
-  <!-- Botón agregar canción -->
+  <!-- Agregar canción -->
   <div *ngIf="uidActual" class="mb-10">
     <a routerLink="/home/nueva">
-      <button
-        class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105 shadow-md"
-      >
+      <button class="bg-electric text-primary px-6 py-3 rounded-xl font-semibold hover:bg-cyan transform transition duration-300 hover:scale-105 shadow-md">
         Agregar Nueva Canción
       </button>
     </a>
@@ -64,33 +56,37 @@
   <!-- Lista de canciones -->
   <div *ngIf="cancionesFiltradas.length > 0; else sinCanciones"
        class="grid gap-6"
-       style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+       style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
 
     <div
       *ngFor="let cancion of cancionesFiltradas"
-      class="bg-[#1e1e1e] hover:bg-[#2a2a2a] hover:border hover:border-cyan rounded-xl p-4 shadow-md hover:shadow-xl transform hover:scale-[1.03] transition-all duration-300 ease-in-out opacity-0 animate-fade-in"
+      class="bg-[#1e1e1e] hover:bg-[#2a2a2a] hover:border hover:border-cyan rounded-xl p-5 shadow-md hover:shadow-xl transform hover:scale-[1.03] transition-all duration-300 ease-in-out opacity-0 animate-fade-in"
     >
       <a [routerLink]="['/home/cancion', cancion.id]" class="text-light no-underline hover:text-cyan block">
         <img
           [src]="cancion.imagenUrl"
           [alt]="'Imagen de ' + cancion.titulo"
-          class="w-full h-40 object-cover rounded-lg mb-3"
+          class="w-full h-44 object-cover rounded-lg mb-4"
         />
-        <h3 class="text-lg font-bold truncate">{{ cancion.titulo }}</h3>
-        <p class="text-sm text-muted">{{ cancion.artista }}</p>
+        <h3 class="text-lg font-semibold truncate mb-1">{{ cancion.titulo }}</h3>
+        <p class="text-sm text-muted mb-3">{{ cancion.artista }}</p>
       </a>
 
-      <!-- 🎵 Reproductor de Audio -->
-      <audio
-        *ngIf="cancion.audioUrl"
-        [src]="cancion.audioUrl"
-        controls
-        class="w-full mt-3 rounded-lg"
-      ></audio>
+      <!-- Reproductor -->
+      <div class="mt-4">
+        <audio
+          #audioRef
+          *ngIf="cancion.audioUrl"
+          [src]="cancion.audioUrl"
+          controls
+          class="w-full rounded-lg shadow-inner bg-[#111] p-1"
+          (play)="alReproducir(audioRef)"
+        ></audio>
+      </div>
     </div>
   </div>
 
-  <!-- Sin resultados -->
+  <!-- Sin canciones -->
   <ng-template #sinCanciones>
     <p class="text-muted text-center mt-12 text-lg">No hay canciones que coincidan con tu búsqueda.</p>
   </ng-template>

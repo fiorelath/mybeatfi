@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlaylistsService, Playlist } from 'src/app/servicios/playlists.service';
 import { CancionesService, Cancion } from 'src/app/servicios/canciones.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Auth } from '@angular/fire/auth'; // 👈 Importa esto
 
 @Component({
   selector: 'app-playlist-form',
@@ -22,7 +23,8 @@ export class PlaylistFormComponent implements OnInit {
     private playlistsService: PlaylistsService,
     private cancionesService: CancionesService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private auth: Auth,
   ) {
     this.playlistForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
@@ -66,9 +68,16 @@ export class PlaylistFormComponent implements OnInit {
       this.guardando = true;
       this.mensaje = '';
 
+      const user = this.auth.currentUser;
+     if (!user) {
+      this.mensaje = '❌ No hay usuario autenticado';
+      this.guardando = false;
+      return;
+    }
+
       const datosPlaylist: Playlist = {
         ...this.playlistForm.value,
-        uid: 'usuario-demo' // 🔐 Reemplazar con UID real en la parte 4
+        uid: user.uid // 🔐 Reemplazar con UID real en la parte 4
       };
 
       const accion = this.idEnEdicion

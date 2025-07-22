@@ -13,7 +13,7 @@ export class PlaylistsComponent implements OnInit {
   constructor(private playlistsService: PlaylistsService) {}
 
   ngOnInit(): void {
-    this.playlists$ = this.playlistsService.obtenerPlaylists();
+    this.playlists$ = this.playlistsService.obtenerPlaylistsDelUsuario();
   }
 
   eliminarPlaylist(id: string | undefined): void {
@@ -22,8 +22,8 @@ export class PlaylistsComponent implements OnInit {
     const confirmacion = confirm('¿Estás seguro de eliminar esta playlist?');
     if (confirmacion) {
       this.playlistsService.eliminarPlaylist(id)
-        .then(() => console.log('✅ Playlist eliminada'))
-        .catch(err => console.error('❌ Error al eliminar playlist', err));
+        .then(() => console.log(' Playlist eliminada'))
+        .catch(err => console.error(' Error al eliminar playlist', err));
     }
   }
 }

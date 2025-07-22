@@ -8,29 +8,33 @@
 
 <!-- Sidebar -->
 <nav
-  class="fixed top-0 left-0 h-screen w-64 backdrop-blur-md bg-[#ffffff10] text-light px-8 py-6 shadow-2xl z-40 transition-transform duration-300 transform md:translate-x-0"
+  class="fixed top-0 left-0 h-screen w-72 backdrop-blur-md bg-[#1f1f1fcc] text-light px-8 py-6 shadow-2xl z-40 transition-transform duration-300 transform md:translate-x-0"
   [ngClass]="{
     '-translate-x-full': !sidebarAbierto,
     'translate-x-0': sidebarAbierto
   }"
 >
 
-  <!-- Logo con más espacio -->
-  <div class="flex items-center gap-3 mb-12">
-    <span class="text-3xl">🎧</span>
-    <h1 class="text-2xl font-bold text-electric font-rubik">MyBeatFi</h1>
+  <!-- Logo ajustado -->
+  <div class="mb-8">
+    <img src="assets/logomf.png" alt="Logo de MyBeatFi" class="w-[220px] h-auto">
   </div>
 
-  <!-- Navegación con más separación -->
-  <ul class="space-y-8 text-lg font-medium">
+  <!-- Navegación con íconos y línea hover -->
+  <ul class="space-y-10 text-lg font-medium">
     <li class="group relative">
       <a
         routerLink="/home"
         routerLinkActive="font-bold"
         (click)="toggleSidebar()"
-        class="block hover:text-electric transition duration-300"
+        class="flex items-center gap-3 relative hover:text-electric transition duration-300"
       >
+        <!-- Home icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 21V9.75z" />
+        </svg>
         Inicio
+        <!-- Línea animada -->
         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-electric transition-all group-hover:w-full"></span>
       </a>
     </li>
@@ -40,8 +44,12 @@
         routerLink="/playlists"
         routerLinkActive="font-bold"
         (click)="toggleSidebar()"
-        class="block hover:text-electric transition duration-300"
+        class="flex items-center gap-3 relative hover:text-electric transition duration-300"
       >
+        <!-- Playlist icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h10M4 18h10" />
+        </svg>
         Mis Playlists
         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-electric transition-all group-hover:w-full"></span>
       </a>
@@ -52,8 +60,12 @@
         routerLink="/login"
         routerLinkActive="font-bold"
         (click)="toggleSidebar()"
-        class="block hover:text-electric transition duration-300"
+        class="flex items-center gap-3 relative hover:text-electric transition duration-300"
       >
+        <!-- Login icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0l4-4m-4 4l4 4m13-9v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h6" />
+        </svg>
         Login
         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-electric transition-all group-hover:w-full"></span>
       </a>
@@ -64,8 +76,12 @@
         routerLink="/login/registro"
         routerLinkActive="font-bold"
         (click)="toggleSidebar()"
-        class="block hover:text-electric transition duration-300"
+        class="flex items-center gap-3 relative hover:text-electric transition duration-300"
       >
+        <!-- Register icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm0 0v2a2 2 0 002 2h4m-6 0v2a2 2 0 002 2h4M12 5V3m0 2a4 4 0 014 4m-4-4a4 4 0 00-4 4m0 4h.01" />
+        </svg>
         Registro
         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-electric transition-all group-hover:w-full"></span>
       </a>
@@ -75,15 +91,24 @@
   <!-- Separador -->
   <hr class="my-10 border-t border-muted opacity-30" />
 
-  <!-- Saludo con espaciado -->
-  <div *ngIf="usuario$ | async as usuario" class="text-sm text-muted">
-    <p class="mb-3">
-      Bienvenido, <span class="text-light font-semibold">{{ usuario.email }}</span>
-    </p>
+  <!-- Saludo con ícono de usuario -->
+  <div *ngIf="usuario$ | async as usuario" class="text-sm text-muted flex flex-col gap-2">
+    <div class="flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.994 9.994 0 0112 15c2.21 0 4.253.714 5.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <p>
+        Bienvenido, <span class="text-light font-semibold">{{ usuario.email }}</span>
+      </p>
+    </div>
     <button
       (click)="logout(); toggleSidebar()"
-      class="text-sm text-electric hover:underline transition"
+      class="text-sm text-electric hover:underline transition flex items-center gap-1"
     >
+      <!-- Logout icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
+      </svg>
       Cerrar sesión
     </button>
   </div>
