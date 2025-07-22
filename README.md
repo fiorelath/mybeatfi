@@ -1,61 +1,105 @@
 # 🎵 MyBeatFi
 
-**MyBeatFi** es una aplicación web donde los usuarios pueden explorar canciones, ver detalles, crear playlists personalizadas y gestionar su biblioteca musical de manera sencilla. La plataforma ofrece una experiencia responsiva, moderna y fluida utilizando tecnologías web actuales como Angular y Firebase.
+MyBeatFi es una aplicación web donde los usuarios pueden explorar canciones, ver detalles, crear playlists personalizadas y gestionar su biblioteca musical de manera sencilla. La plataforma ofrece una experiencia responsiva, moderna y fluida utilizando tecnologías web actuales como Angular y Firebase.
 
 ---
 
-## 🚀 Tecnologías usadas
+## 🚀 Tecnologías Usadas
 
-- Angular 
-- AngularFire
-- Firebase Authentication
-- Firebase Firestore
-- Tailwind CSS 
-- TypeScript
-- Git y GitHub
-- Cloudinary – Servicio de almacenamiento y entrega de imágenes
+* *Angular*: Framework principal del frontend  
+* *AngularFire*: Integración de Angular con Firebase  
+* *Firebase Authentication*: Servicio para la gestión de usuarios  
+* *Firebase Firestore*: Base de datos NoSQL en la nube  
+* *Tailwind CSS*: Framework CSS para estilos utilitarios  
+* *TypeScript*: Lenguaje de programación  
+* *Git y GitHub*: Control de versiones y alojamiento de código  
+* *Cloudinary*: Servicio de almacenamiento y entrega de imágenes
 
 ---
 
-## 📦 Instalación del proyecto
+## 📦 Instalación del Proyecto
 
-1. Clona el repositorio:
+Para poner en marcha el proyecto localmente, sigue estos pasos:
 
-```bash
-git clone https://github.com/fiorelath/mybeatfi.git
+1.  *Clona el repositorio:*
+    ```bash
+    git clone https://github.com/fiorelath/mybeatfi.git
+    cd mybeatfi
+    ```
 
-##  Arquitectura del proyecto 
+2.  *Instala las dependencias:*
+    ```bash
+    npm install
+    ```
 
-MyBeatFy está organizado bajo una arquitectura modular siguiendo buenas prácticas de Angular, con separación clara entre componentes, servicios, modelos, rutas y estilos.
+3.  *Configura Firebase:*
+    Crea un archivo `src/environments/environment.ts` (o `src/app/firebase.ts` si tu configuración es global como en nuestros ejemplos anteriores) y añade tus credenciales de Firebase.
 
-###  Componentes principales
+    ```typescript
+    // Ejemplo de src/environments/environment.ts
+    export const environment = {
+      production: false,
+      firebase: {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_DOMINIO.firebaseapp.com",
+        projectId: "TU_PROJECT_ID",
+        storageBucket: "TU_STORAGE_BUCKET",
+        messagingSenderId: "TU_MESSAGING_SENDER_ID",
+        appId: "TU_APP_ID"
+      }
+    };
+    ```
 
-- **InicioComponent**: Página de bienvenida.
-- **CancionesComponent**: Muestra la lista de canciones.
-- **AgregarCancionComponent**: Formulario para crear y editar canciones usando formularios reactivos.
-- **PlaylistsComponent**: Gestión de playlists del usuario.
-- **LoginComponent / RegisterComponent**: Manejo de autenticación.
-- **NavbarComponent**: Barra de navegación entre vistas.
+    *(Asegúrate de que esta configuración coincida con cómo estás inicializando Firebase en tu `app.config.ts` o `firebase.ts`.)*
 
-###  Servicios
+4.  *Inicia el servidor de desarrollo:*
+    ```bash
+    ng serve
+    ```
 
-- **AuthService**: Manejo de registro, login y logout mediante Firebase Authentication.
-- **CancionesService**: Realiza operaciones CRUD sobre las canciones almacenadas en Firestore.
-- **PlaylistsService**: CRUD de playlists y relación con canciones.
+    La aplicación estará disponible en `http://localhost:4200/`.
 
-###  Otros elementos clave
+---
 
-- **Guards**: Protección de rutas para restringir acceso solo a usuarios autenticados.
-- **Pipes personalizados**: Mejora visual de datos como duración de la canción o filtros por género.
+## 📐 Arquitectura del Proyecto
+
+MyBeatFi está organizado bajo una arquitectura modular siguiendo buenas prácticas de Angular, con separación clara entre componentes, servicios, modelos, rutas y estilos.
+
+### Componentes Principales
+
+* `InicioComponent`: Página de bienvenida de la aplicación.  
+* `CancionesComponent`: Muestra la lista completa de canciones disponibles.  
+* `AgregarCancionComponent`: Formulario para crear y editar canciones, utilizando formularios reactivos para una gestión de datos eficiente.  
+* `PlaylistsComponent`: Permite a los usuarios gestionar sus playlists personalizadas.  
+* `LoginComponent / RegisterComponent`: Manejan el proceso de autenticación de usuarios.  
+* `NavbarComponent`: Barra de navegación principal para moverse entre las diferentes vistas de la aplicación.
+
+### Servicios
+
+* `AuthService`: Encargado de la lógica de registro, inicio y cierre de sesión mediante Firebase Authentication.  
+* `CancionesService`: Realiza operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre las canciones almacenadas en Firestore.  
+* `PlaylistsService`: Gestiona las playlists de los usuarios y su relación con las canciones.
+
+### Otros Elementos Clave
+
+* *Guards*: Implementados para proteger rutas, restringiendo el acceso solo a usuarios autenticados.  
+* *Pipes personalizados*: Mejoran la visualización de datos, como el formato de la duración de las canciones o el filtrado por género.
+
+---
 
 ## 🌐 URL de Firebase Hosting
 
-Puedes ver la aplicación desplegada aquí:  
+Puedes ver la aplicación desplegada en vivo aquí:
+
 🔗 [https://mybeatfi-2b572.web.app](https://mybeatfi-2b572.web.app)
 
 ---
 
-## 🎥 Video demostrativo (5 a 8 minutos)
+## 🎥 Video Demostrativo
 
-Puedes ver una demostración completa de la aplicación en funcionamiento aquí:  
+Puedes ver una demostración completa de la aplicación en funcionamiento aquí:
+
 📹 [https://youtu.be/jFsUYsKcFc4](https://youtu.be/jFsUYsKcFc4)
+
+---
+
